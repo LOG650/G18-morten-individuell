@@ -60,7 +60,7 @@ inneholder både trend og sesongmønstre, og er derfor mye brukt i
 operativ etterspørselsplanlegging (Hyndman & Athanasopoulos, 2021).
 Innen farmasøytisk industri viser studier at Holt--Winters ofte gir
 tilfredsstillende prognosenøyaktighet når dataserier inneholder tydelige
-sesongkomponenter (Burinskiene, 2022).
+sesongkomponenter (Burinskiene, 2020).
 
 Nyere forskning indikerer imidlertid at maskinlæringsmetoder kan
 håndtere mer komplekse og ikke-lineære mønstre i data. Spesielt har
@@ -111,8 +111,9 @@ forskningsspørsmål:
 > produktsegmenter, slik som høy- og lavvolum-SKU-er eller SKU-er med
 > og uten tydelig sesongmønster?
 >
-> **RQ3:** I hvilken grad gir økt modellkompleksitet reell merverdi i
-> en operasjonell planleggingskontekst?
+> **RQ3:** I hvilken grad gir økt modellkompleksitet reell merverdi når
+> prognosepresisjon vurderes opp mot implementeringskostnad,
+> tolkningsbarhet og praktisk anvendbarhet i operativ planlegging?
 
 Disse feilmålene er valgt fordi de fanger ulike aspekter ved
 prognosenøyaktighet: RMSE vektlegger store avvik og er sensitiv for
@@ -125,7 +126,10 @@ ulik volumskala (Hyndman & Athanasopoulos, 2021).
 For å sikre analytisk presisjon gjøres følgende avgrensninger:
 
 **Datasett:** Studien benytter kun historiske leveransedata (månedlig
-volum). Eksterne forklaringsvariabler som pris, kampanjer, demografi
+volum fra sentrallager til grossist) — ikke faktisk sluttkundetterspørsel.
+Leveranser brukes som en proxy for etterspørsel, og dette skillet er
+sentralt for tolkningen av resultatene (se avsnitt 4.3, Forutsetning 1).
+Eksterne forklaringsvariabler som pris, kampanjer, demografi
 eller regulatoriske utfordringer inkluderes ikke, ettersom formålet er
 å isolere effekten av historisk volum som prediktor og unngå at
 modellutvalgene påvirkes av uobserverte kovariater.
@@ -133,9 +137,9 @@ modellutvalgene påvirkes av uobserverte kovariater.
 **Tidsperiode:** Datasettet dekker totalt 48 måneder (januar 2022 –
 desember 2025), hvorav 36 måneder benyttes som treningssett og 12
 måneder som testsett. Lengre historikk er ikke tilgjengelig fra
-virksomheten. Train/test-splitten på 36/12 måneder er i tråd med
-anbefalinger i prognoselitteraturen for å sikre et representativt
-evalueringsvindu (Hyndman & Athanasopoulos, 2021).
+virksomheten. Splitten er valgt fordi den gir tre hele år til trening
+og ett helt år til testing, slik at modellene evalueres over en full
+sesongsyklus.
 
 **Prognosehorisont:** Fokus er på én måneds fremover-prognose, relevant
 for operativ lager- og distribusjonsplanlegging. Lengre horisonter er
@@ -172,6 +176,15 @@ Disse avgrensningene gjør det mulig å analysere modellenes prestasjon
 under realistiske og sammenlignbare betingelser, samtidig som metodisk
 etterprøvbarhet opprettholdes.
 
+Studien er gjennomført med støtte av AI-verktøy (Claude, OpenAI) i en
+*human-in-the-loop*-arbeidsflyt, i tråd med LOG650-emnets rammer for
+AI-assistert forskningsprosess. AI er benyttet til kodeutvikling,
+feilsøking, strukturering av analysetrinn og rapportutforming. Studenten
+har hatt fullt ansvar for problemstilling, datatilgang, metodevalg,
+tolkning av resultater og faglig kvalitetssikring. Alle analytiske
+beslutninger — herunder modellvalg, parametersetting og vurdering av
+statistisk signifikans — er tatt av studenten og begrunnet i rapporten.
+
 Rapporten er strukturert som følger: Avsnitt 2 gjennomgår relevant
 teori og litteratur om etterspørselsprognoser og prognosemodeller.
 Avsnitt 3 beskriver caset og datagrunnlaget. Avsnitt 4 redegjør for
@@ -183,52 +196,138 @@ konklusjonene.
 
 # 2.0 Teori og litteratur
 
-Dette kapittelet etablerer det teoretiske rammeverket for studien ved å
-gjennomgå sentral litteratur om etterspørselsprognoser, tidsseriemodeller
-og maskinlæringsbaserte prognosemetoder. Gjennomgangen er strukturert
-fra enkle referansemodeller til mer avanserte metoder, og avsluttes med
-en diskusjon av uenigheter i litteraturen og en plassering av denne
-studien i forskningslandskapet.
+Dette kapittelet etablerer det teoretiske rammeverket for studien.
+Gjennomgangen er strukturert i fire deler: generell prognoseteori (2.1),
+prognoser i farmasøytisk og logistisk kontekst (2.2), maskinlæring og
+globale modeller (2.3), og uenigheter i forskningen samt plassering av
+denne studien i litteraturen (2.4).
+
+## 2.1 Generell prognoseteori
 
 Etterspørselsprognoser er et sentralt forskningsområde innen logistikk
 og supply chain management, ettersom prognosenøyaktighet direkte påvirker
 beslutninger knyttet til lagerstyring, produksjonsplanlegging og
-distribusjon (Hyndman & Athanasopoulos, 2021). I farmasøytisk sektor
-er presise prognoser særlig kritiske: feilprognoser kan enten føre til
-legemiddelmangel med direkte konsekvenser for pasienter, eller til
-overlagring med økt kapitalbinding og risiko for ukurans. Prognoser
-utvikles typisk ved hjelp av kvantitative metoder som utnytter historiske
-mønstre i etterspørselsdata — enten gjennom statistiske modeller som
-eksponentiell glatting og ARIMA, eller gjennom maskinlæringsbaserte
-metoder som XGBoost (Petropoulos et al., 2022).
+distribusjon (Hyndman & Athanasopoulos, 2021). Prognoser utvikles typisk
+ved hjelp av kvantitative metoder som utnytter historiske mønstre i
+etterspørselsdata — enten gjennom statistiske modeller som eksponentiell
+glatting og ARIMA, eller gjennom maskinlæringsbaserte metoder som XGBoost
+(Petropoulos et al., 2022).
 
-## Klassiske tidsseriemodeller
+Tradisjonelle prognosemetoder er basert på statistisk tidsserieanalyse
+og antar at historiske observasjoner inneholder informasjon om fremtidige
+verdier gjennom trend, sesongmønstre og autokorrelasjon.
 
-Tradisjonelle prognosemetoder er basert på statistisk tidsserieanalyse og antar at historiske observasjoner inneholder informasjon om fremtidige verdier gjennom trend, sesongmønstre og autokorrelasjon.
+Den enkleste formen for sesongbasert prognose er den naive sesongprognosen
+(seasonal naïve method), som antar at fremtidig etterspørsel tilsvarer
+verdien fra tilsvarende periode ett år tidligere. For månedlige data er
+prognosen for periode $t$ lik observasjonen fra periode $t-12$. Modellen
+fungerer primært som en referansemodell (benchmark) for å vurdere om mer
+avanserte metoder faktisk tilfører prediktiv verdi (Hyndman &
+Athanasopoulos, 2021). I prognoselitteraturen er det etablert praksis å
+inkludere en naiv referansemodell i alle komparative evalueringer,
+ettersom en modell som ikke slår det naive nivået ikke gir grunnlag for
+implementering (Makridakis et al., 2022).
 
-Den enkleste formen for sesongbasert prognose er den naive sesongprognosen (seasonal naïve method), som antar at fremtidig etterspørsel tilsvarer verdien fra tilsvarende periode ett år tidligere. For månedlige data er prognosen for periode $t$ lik observasjonen fra periode $t-12$. Modellen tar ingen hensyn til trend eller andre mønstre utover sesong, og fungerer primært som en referansemodell (benchmark) for å vurdere om mer avanserte metoder faktisk tilfører prediktiv verdi (Hyndman & Athanasopoulos, 2021). I prognoselitteraturen er det etablert praksis å inkludere en naiv referansemodell i alle komparative evalueringer, ettersom en modell som ikke slår det naive nivået ikke gir grunnlag for implementering (Makridakis et al., 2022).
+Holt--Winters-metoden er en videreutvikling av eksponentiell glatting
+som dekomponerer tidsserien i tre komponenter: nivå, trend og sesong.
+Metoden er spesielt egnet for dataserier med stabile sesongmønstre og
+brukes mye i operativ salgs- og lagerprognostisering (Hyndman &
+Athanasopoulos, 2018).
 
-Holt--Winters-metoden er en videreutvikling av eksponentiell glatting som dekomponerer tidsserien i tre komponenter: nivå, trend og sesong. Metoden er spesielt egnet for dataserier med stabile sesongmønstre og brukes mye i operativ salgs- og lagerprognostisering (Hyndman & Athanasopoulos, 2018).
+ARIMA (Autoregressive Integrated Moving Average) beskriver tidsserier
+gjennom statistiske sammenhenger mellom tidligere observasjoner og
+prognosefeil. Modellen kan tilpasses fleksibelt til serier uten tydelig
+sesongstruktur (Box et al., 2015), og studier viser at statistiske
+modeller fortsatt gir gode resultater ved korte og stabile dataserier
+(Petropoulos et al., 2022).
 
-ARIMA (Autoregressive Integrated Moving Average) beskriver tidsserier gjennom statistiske sammenhenger mellom tidligere observasjoner og prognosefeil. Modellen kan tilpasses fleksibelt til serier uten tydelig sesongstruktur (Box et al., 2015), og studier viser at statistiske modeller fortsatt gir gode resultater ved korte og stabile dataserier (Petropoulos et al., 2022).
+## 2.2 Prognoser i farmasøytisk og logistisk kontekst
 
-Innen farmasøytisk retail viser Burinskiene (2022) at prognosenøyaktighet påvirkes like mye av datakvalitet og struktureringsnivå som av selve modellvalget. Prognoser på et mer detaljert nivå i distribusjonskjeden gir bedre presisjon enn aggregerte analyser, og håndtering av outliers og mangelperioder er avgjørende for pålitelige resultater.
+I farmasøytisk sektor er presise prognoser særlig kritiske: feilprognoser
+kan enten føre til legemiddelmangel med direkte konsekvenser for
+pasienter, eller til overlagring med økt kapitalbinding og risiko for
+ukurans. Etterspørselen er i varierende grad sesongpreget — respiratoriske
+legemidler og vitaminer viser typisk høyere etterspørsel i vinterhalvåret,
+mens andre produktkategorier har mer stabil etterspørsel gjennom året.
 
-## Maskinlæringsbaserte metoder
+Burinskiene (2020) viser at prognosenøyaktighet i farmasøytisk retail
+påvirkes like mye av datakvalitet og struktureringsnivå som av selve
+modellvalget. Prognoser på et mer detaljert nivå i distribusjonskjeden
+gir bedre presisjon enn aggregerte analyser, og håndtering av outliers
+og mangelperioder er avgjørende for pålitelige resultater.
 
-I nyere forskning har maskinlæringsmetoder fått stadig mer oppmerksomhet innen etterspørselsprognoser. Disse metodene skiller seg fra tradisjonelle modeller ved at de lærer mønstre direkte fra data uten å forutsette en bestemt statistisk struktur. XGBoost (Extreme Gradient Boosting) er en ensemblemetode basert på gradient boosting av beslutningstrær (Chen & Guestrin, 2016) og har vist sterke resultater i en rekke prediksjonsoppgaver.
+Fourkiotis og Tsadiras (2024) sammenligner statistiske modeller og
+maskinlæringsmetoder på farmasøytiske salgsdata og finner at XGBoost
+typisk gir lavere prognosefeil enn tradisjonelle modeller, men at
+enklere statistiske modeller kan prestere like godt ved tydelige
+sesongmønstre. Absoluttnivåene for MAPE er høye sammenlignet med
+forbruksvarer, noe som er konsistent med den høye etterspørselsvariabiliteten
+og det høye innslaget av lavvolum-produkter som kjennetegner
+farmasøytisk distribusjon.
 
-Fourkiotis og Tsadiras (2024) sammenligner statistiske modeller og maskinlæringsmetoder på farmasøytiske salgsdata og finner at XGBoost typisk gir lavere prognosefeil enn tradisjonelle modeller, men at enklere statistiske modeller kan prestere like godt ved tydelige sesongmønstre. Zhu et al. (2021) viser at maskinlæringsmodeller kan forbedre prognosenøyaktigheten ytterligere ved å utnytte informasjon på tvers av relaterte tidsserier — særlig relevant for datasett med mange produkter og begrenset historikk per varelinje.
+## 2.3 Maskinlæring og globale modeller
 
-## Uenigheter i forskningen
+I nyere forskning har maskinlæringsmetoder fått stadig mer oppmerksomhet
+innen etterspørselsprognoser. Disse metodene skiller seg fra tradisjonelle
+modeller ved at de lærer mønstre direkte fra data uten å forutsette en
+bestemt statistisk struktur. XGBoost (Extreme Gradient Boosting) er en
+ensemblemetode basert på gradient boosting av beslutningstrær (Chen &
+Guestrin, 2016) og har vist sterke resultater i en rekke prediksjonsoppgaver.
 
-Til tross for den økte interessen for maskinlæringsmetoder er det fortsatt uenighet i litteraturen om hvorvidt slike metoder alltid er overlegne tradisjonelle modeller. Petropoulos et al. (2022) viser at enklere modeller kan prestere like godt eller bedre ved korte og relativt stabile dataserier. En sentral diskusjon handler om forholdet mellom modellkompleksitet og praktisk nytte: mer avanserte modeller er vanskeligere å implementere og tolke, og økt kompleksitet gir ikke nødvendigvis bedre beslutningsgrunnlag i operative planleggingsprosesser.
+En viktig distinksjon i maskinlæringsbasert prognostisering er valget
+mellom *lokal* og *global* treningsstrategi. En lokal modell trenes
+individuelt per produkt og utnytter kun den aktuelle varelinjes historikk.
+En global modell trenes på tvers av alle produkter simultant og kan dermed
+lære mønstre som er felles for porteføljen — sesongtopper, trendretning
+og etterspørselsrytme — selv om den individuelle historikken er kort.
+Zhu et al. (2021) viser at maskinlæringsmodeller kan forbedre
+prognosenøyaktigheten ytterligere ved å utnytte informasjon på tvers av
+relaterte tidsserier, særlig relevant for datasett med mange produkter
+og begrenset historikk per varelinje.
 
-## Plassering av studien i litteraturen
+Dette er særlig relevant for datasett som dette: med kun 36
+treningsobservasjoner per SKU gir en lokal XGBoost-modell etter
+laggkonstruksjon kun ~24 brukbare treningsrader — for lite for en
+trebasert ensemblemetode. En global modell løser dette ved å poole
+data på tvers av alle 105 SKU-er og gi ~2 520 treningsrader totalt,
+noe som kompenserer for den korte individuelle historikken. Dette
+prinsippet — kjent som *cross-learning* eller *global pooling* — er
+en sentral mekanisme bak de best plasserte løsningene i M5-konkurransen
+(Makridakis et al., 2022). Implikasjonen er at XGBoosts relative fordel
+i dette datasettet forventes å stamme fra pooling-effekten, ikke fra
+gradient boosting-arkitekturen alene — en hypotese som testes eksplisitt
+i studien (avsnitt 8.3).
 
-De gjennomgåtte studiene gir et solid teoretisk grunnlag, men etterlater flere ubesvarte spørsmål som er relevante for denne studien. Burinskiene (2022) analyserer prognoser i farmasøytisk retail, men dekker ikke distribusjonsleddet mellom sentrallager og grossist. Fourkiotis og Tsadiras (2024) sammenligner statistiske og maskinlæringsbaserte metoder på farmasøytiske data, men benytter ikke en naiv sesongprognose som referansemodell og inkluderer ikke Diebold-Mariano-testing for å vurdere statistisk signifikans i modellforskjeller. Zhu et al. (2021) demonstrerer verdien av tverrproduktlæring, men fokuserer på supply chain-data med eksogene variabler som ikke er tilgjengelig i dette studiet. Petropoulos et al. (2022) gir en bred oversikt over prognoselitteraturen, men gir ikke empiriske resultater for det spesifikke dataformatet — månedlige paneldata med 105 SKU-er og 48 måneders historikk — som benyttes her.
+## 2.4 Uenigheter i forskningen og plassering av studien
 
-Denne studien fyller dette gapet ved å kombinere et felles evalueringsrammeverk med statistisk testing på et reelt distribusjonsdatasett, og ved å analysere om modellprestasjonene er stabile på tvers av produktsegmenter.
+Til tross for den økte interessen for maskinlæringsmetoder er det
+fortsatt uenighet i litteraturen om hvorvidt slike metoder alltid er
+overlegne tradisjonelle modeller. Petropoulos et al. (2022) viser at
+enklere modeller kan prestere like godt eller bedre ved korte og relativt
+stabile dataserier. En sentral diskusjon handler om forholdet mellom
+modellkompleksitet og praktisk nytte: mer avanserte modeller er
+vanskeligere å implementere og tolke, og økt kompleksitet gir ikke
+nødvendigvis bedre beslutningsgrunnlag i operative planleggingsprosesser.
+
+De gjennomgåtte studiene etterlater flere ubesvarte spørsmål som er
+relevante for denne studien. Burinskiene (2020) analyserer prognoser i
+farmasøytisk retail, men dekker ikke distribusjonsleddet mellom
+sentrallager og grossist. Fourkiotis og Tsadiras (2024) sammenligner
+statistiske og maskinlæringsbaserte metoder på farmasøytiske data, men
+benytter ikke en naiv sesongprognose som referansemodell og inkluderer
+ikke Diebold-Mariano-testing for å vurdere statistisk signifikans i
+modellforskjeller. Zhu et al. (2021) demonstrerer verdien av
+tverrproduktlæring, men fokuserer på supply chain-data med eksogene
+variabler som ikke er tilgjengelig i dette studiet. Petropoulos et al.
+(2022) gir en bred oversikt over prognoselitteraturen, men gir ikke
+empiriske resultater for det spesifikke dataformatet — månedlige
+paneldata med 105 SKU-er og 48 måneders historikk — som benyttes her.
+
+Denne studien fyller dette gapet ved å kombinere et felles
+evalueringsrammeverk med statistisk testing på et reelt
+distribusjonsdatasett, ved å analysere om modellprestasjonene er stabile
+på tvers av produktsegmenter, og ved å isolere pooling-effekten gjennom
+et kontrolleksperiment med individuell XGBoost-trening.
 
 # 3.0 Casebeskrivelse
 
@@ -278,16 +377,28 @@ annen identifiserende informasjon er fjernet.
 ## Forskerposisjon
 
 Studenten er ansatt i virksomheten og har hentet datasettet direkte fra
-ERP-systemet. Denne insider-posisjonen gir fordeler i form av tilgang
-til reelle operasjonelle data og kontekstuell forståelse av
-forretningsprosessene. Samtidig innebærer en slik posisjon en risiko for
-konfirmasjonsskjevhet, der forskeren ubevisst tolker resultater i tråd
-med egne forventninger (Bryman, 2012). For å redusere denne risikoen er
-analysen gjennomført med et fast evalueringsrammeverk definert før
-modellering, og alle parametere og resultater er dokumentert i
-versjonskontrollert kode uten manuell justering av utfall. Virksomhetens
-egne interne prognosemodeller er ikke tilgjengelige for studenten og
-inngår ikke i analysen.
+ERP-systemet. Insider-posisjonen medfører både fordeler og ulemper som
+er relevante for vurderingen av studiens gyldighet.
+
+Fordelene er substansielle: studenten har førstehånds kjennskap til
+dataenes opprinnelse, mulige feilkilder og operasjonell kontekst. Dette
+gjør det mulig å vurdere om enkeltobservasjoner skyldes reell variasjon
+eller registreringsfeil, og å tolke resultatene i lys av faktiske
+forretningsprosesser — kunnskap som ikke er tilgjengelig for en ekstern
+forsker. Innsikten i distribusjonskjedens struktur, leveransesykluser og
+produktporteføljens sammensetning er direkte relevant for tolkningen av
+modellenes styrker og svakheter.
+
+Ulempen er risikoen for konfirmasjonsskjevhet, der studenten ubevisst
+tolker resultater i tråd med egne forventninger (Bryman, 2012). For å
+redusere denne risikoen er analysen gjennomført med et fast
+evalueringsrammeverk definert før modellering, og alle parametere og
+resultater er dokumentert i versjonskontrollert kode uten manuell
+justering av utfall. Bruken av AI-verktøy i analyse og strukturering
+bidrar i tillegg til at databehandlingen er reproduserbar og uavhengig
+av studentens forhåndsoppfatninger. Virksomhetens egne interne
+prognosemodeller er ikke tilgjengelige for studenten og inngår ikke i
+analysen.
 
 # 4.0 Metode og data
 
@@ -321,6 +432,37 @@ Analysen er gjennomført i Python ved bruk av bibliotekene `statsmodels`, `pmdar
 
 Datasettet er anonymisert av studenten i tråd med virksomhetens retningslinjer for bruk av data i KI-verktøy og akademisk forskning. Anonymiseringen sikrer at hverken produktidentitet eller bedriftsinformasjon kan identifiseres av tredjeparter.
 
+## 4.1 Bruk av kunstig intelligens i forskningsprosessen
+
+I tråd med LOG650-emnets rammer er kunstig intelligens benyttet som
+støtteverktøy gjennom hele forskningsprosessen. Bruken er basert på en
+*human-in-the-loop*-tilnærming der studenten har beholdt fullt faglig
+ansvar for alle sentrale beslutninger, mens AI har bistått med operativt
+og teknisk arbeid.
+
+**AI-verktøyene ble benyttet til:**
+
+- Kodeutvikling i Python, herunder implementering av prognosemodeller,
+  featurebygging, krysskalibrering og visualisering
+- Feilsøking og optimalisering av analysekode
+- Strukturering av rapport og faglig bearbeiding av tekst
+- Forklaring av modellteori og metodiske valg underveis i prosessen
+
+**Studenten hadde fullt ansvar for:**
+
+- Definisjon av problemstilling, forskningsspørsmål og avgrensninger
+- Innhenting og anonymisering av datasettet fra virksomhetens ERP-system
+- Valg av modeller, evalueringsmetrikker og analytisk rammeverk
+- Tolkning av resultater og vurdering av statistisk signifikans
+- Faglig kvalitetssikring av alle konklusjoner
+
+AI-generert innhold — enten kode, tekstutkast eller metodiske forklaringer
+— ble ikke brukt ukritisk, men alltid vurdert opp mot relevant teori,
+faktiske resultater og studentens egne faglige vurderinger. Alle
+analyseresultater er reproduserbare fra den versjonskontrollerte koden
+og det anonymiserte datasettet, uavhengig av hvilke AI-verktøy som har
+vært benyttet i prosessen.
+
 ## 4.2 Data
 
 Datasettet er beskrevet i detalj i avsnitt 3.0 (Casebeskrivelse). Her
@@ -347,34 +489,29 @@ baseres på historiske salgsdata.
 
 ## Tidsperiode og datastruktur
 
-Datasettet dekker perioden: **Januar 2022 -- desember 2025**
+Datasettet dekker perioden **januar 2022 – desember 2025**, noe som gir
+**48 månedlige observasjoner per varelinje**. Alle 105 SKU-er er til
+stede i hele perioden — ingen varelinjer ble fjernet fra analysen.
 
-Dette gir totalt **48 månedlige observasjoner per varelinje** i
-rådatasettet.
+## Datasettets innhold og datarensing
 
-For analyseformål ble den effektive tidsperioden noe kortere for enkelte
-varelinjer som inneholdt manglende observasjoner, i tråd med
-datarenseprosessen beskrevet i avsnitt 4.2.
+Rådatasettet inneholder nøyaktig **5 040 observasjoner (105 SKU-er × 48
+måneder)**. Datarensingen besto av følgende konkrete steg:
 
-## Datasettets innhold
-
-Datasettet inneholder:
-
-**105 varelinjer (SKU-er)**
-
-månedlige leveransevolumer
-
-opptil **48 observasjoner per varelinje**
-
-Totalt inneholder rådatasettet omtrent:
-
-**5 040 potensielle observasjoner (105 × 48 måneder).**
-
-Etter datarensing ble antall brukbare observasjoner noe lavere enn det
-teoretiske maksimum, ettersom enkelte varelinjer inneholdt manglende
-verdier i deler av tidsperioden. Datarensingen besto av håndtering av
-manglende verdier, kontroll av ekstreme observasjoner og fjerning av
-ufullstendige tidsserier.
+- **Ikke-numeriske verdier** ble konvertert til `NaN` ved innlasting og
+  deretter satt til 0. Dette gjaldt perioder uten registrert leveranse,
+  tolket som reelt nullsalg.
+- **Ingen observasjoner ble fjernet** fra tidsseriene. Alle 5 040
+  observasjoner inngår i analysen.
+- **Ingen SKU-er ble ekskludert.** Alle 105 varelinjer har komplette
+  tidsserier på 48 måneder etter rensing.
+- **Nullverdier beholdt:** 80 av 105 SKU-er (76,2 %) har minst én
+  månedlig observasjon med nullverdi. Disse er beholdt som gyldige
+  observasjoner og representerer perioder uten leveranse. MAPE-beregningen
+  ekskluderer perioder der $y_t = 0$ for å unngå divisjon på null
+  (jf. avsnitt 4.3, Forutsetning 5).
+- **Ingen outlier-fjerning** ble gjennomført. Ekstreme enkeltobservasjoner
+  er beholdt for å reflektere faktisk etterspørselsvariasjon.
 
 ## Tilgang til data
 
@@ -384,24 +521,6 @@ anonymiserte dataene er kun brukt til analyse i denne studien.
 Strukturen i datasettet og metodene som er brukt i analysen er
 imidlertid beskrevet slik at tilsvarende analyser kan gjennomføres på
 andre datasett med tilsvarende struktur.
-
-**Databehandling (Data Cleaning)**\
-Før analysen ble datasettet kontrollert og klargjort for statistisk
-modellering. Formålet med datarensingen var å sikre konsistens i
-tidsseriene og redusere risikoen for at feil i data påvirker
-prognosemodellene. Håndtering av manglende observasjoner og outliers er
-en viktig del av tidsserieanalyse, ettersom slike forhold kan påvirke
-både modelltilpasning og prognosepresisjon (Hyndman & Athanasopoulos,
-2021). Følgende steg ble gjennomført: kontroll av manglende
-observasjoner i tidsseriene, kontroll av ekstreme verdier (outliers),
-sikring av konsistent tidsstruktur med én observasjon per måned og
-konvertering av dato til månedlig tidsindeks. Manglende observasjoner
-ble håndtert ved å kontrollere om de skyldtes manglende salg eller
-manglende registrering. Dersom observasjonen representerte reelt
-nullsalg, ble verdien beholdt. Dersom observasjonen skyldtes manglende
-registrering, ble den enten korrigert eller ekskludert fra analysen.
-Etter datarensing besto datasettet av komplette månedlige tidsserier som
-kunne brukes til sammenligning av prognosemodeller.
 
 ## Beskrivelse av datasettet
 
@@ -475,14 +594,30 @@ gyldigheten av denne forutsetningen for dette datasettet.
 
 Det antas at prognoseavvikene ikke inneholder vedvarende systematisk
 over- eller underestimering, slik at feilmålene RMSE, MAE og MAPE gir
-meningsfull sammenligning mellom modellene. Et viktig unntak er MAPE,
-som er udefinert når faktisk verdi $y_t = 0$ og ustabil for
-lavvolum-SKU-er der små absolutte avvik gir svært høye prosentverdier
-(Hyndman & Athanasopoulos, 2021). For å håndtere dette benyttes median
-fremfor gjennomsnitt ved aggregering på tvers av SKU-er, noe som
-reduserer påvirkningen fra ekstreme MAPE-verdier i lavvolum-segmentet.
+meningsfull sammenligning mellom modellene.
 
-Samlet innebærer forutsetningene at studiens resultater primært gjelder stabile distribusjonssystemer uten større strukturelle brudd.
+MAPE er imidlertid metodisk sårbart i dette datasettet. Målet er
+udefinert når $y_t = 0$ og ustabilt for lavvolum-SKU-er, der små
+absolutte avvik gir svært høye prosentverdier (Hyndman &
+Athanasopoulos, 2021). Med 80 av 105 SKU-er (76,2 %) med minst én
+nullverdi i tidsserien er dette ikke et marginalt problem, men et
+strukturelt trekk ved datasettet. To tiltak er gjennomført for å
+begrense effekten: (1) perioder med $y_t = 0$ ekskluderes fra
+MAPE-beregningen per varelinje, og (2) median benyttes fremfor
+gjennomsnitt ved aggregering på tvers av SKU-er, noe som reduserer
+påvirkningen fra ekstreme enkeltobservasjoner.
+
+Disse tiltakene reduserer, men eliminerer ikke, MAPEs svakhet på dette
+datasettet. Alternative feilmål som sMAPE (Symmetric MAPE) og MASE
+(Mean Absolute Scaled Error) er mer robuste ved nullverdier og
+asymmetriske fordelinger (Hyndman & Koehler, 2006), men er ikke
+inkludert i denne studien for å begrense omfanget. Bruk av slike mål
+er et naturlig steg i videre forskning på tilsvarende datasett.
+
+Samlet innebærer forutsetningene at studiens resultater primært gjelder
+stabile distribusjonssystemer uten større strukturelle brudd, og at
+MAPE-verdiene bør tolkes relativt mellom modeller fremfor som absolutte
+mål på prognosepresisjon.
 
 # 5.0 Modellering
 
@@ -492,7 +627,33 @@ Modelleringen er gjennomført i Python ved bruk av bibliotekene `statsmodels`, `
 
 Datasettet er delt inn i et treningssett og et testsett ved hjelp av en *hold-out*-strategi. Treningssettet består av de første 36 månedene (januar 2022 – desember 2024), mens testsettet består av de siste 12 månedene (januar 2025 – desember 2025). Denne inndelingen er valgt fordi testperioden dekker én full sesongssyklus, noe som gjør det mulig å evaluere modellenes evne til å predikere sesongvariasjoner. Hold-out-evaluering er i tråd med standard praksis i tidsserieanalyse (Hyndman & Athanasopoulos, 2021).
 
-Alle 105 varelinjer modelleres separat for de individuelle modellene (naiv, Holt-Winters, ARIMA), i tråd med forutsetningen om uavhengige tidsserier. XGBoost trenes som en global modell på tvers av alle varelinjer. Prognosehorisonten er 12 måneder, og alle modeller produserer etterskuddsprognoser (*out-of-sample*) for testperioden.
+Alle 105 varelinjer modelleres separat for de individuelle modellene
+(naiv, Holt-Winters, ARIMA), i tråd med forutsetningen om uavhengige
+tidsserier. XGBoost trenes som en global modell på tvers av alle
+varelinjer.
+
+**Prognosestrategi og evalueringshorisont:**
+Testperioden dekker 12 måneder (januar–desember 2025), og alle modeller
+produserer *out-of-sample*-prognoser for hele denne perioden. Det er
+viktig å skille mellom to begreper som brukes i rapporten:
+
+- *Prognosehorisont* på 12 måneder betyr at modellene evalueres på 12
+  påfølgende måneder etter treningsperiodens slutt (desember 2024).
+  Dette er evalueringsvinduet, ikke en 12-måneders direkteprognose laget
+  i ett steg.
+- *Operativ prognoseenhet* er én måned av gangen: modellene predikerer
+  én periode frem i tid per steg.
+
+Naïv, Holt-Winters og ARIMA/SARIMA benytter en **direkte
+flertrinns-strategi**: modellen tilpasses treningssettet og genererer
+alle 12 prognoseperioder i ett kall fra slutten av treningsperioden.
+XGBoost (både global og individuell) benytter en **rekursiv
+én-stegs-strategi**: modellen predikerer én måned frem, den predikerte
+verdien legges til historikken, og prosessen gjentas 12 ganger. Denne
+strategien er nødvendig fordi XGBoost bruker laggede observasjoner som
+input, og laggverdier for fremtidige perioder ikke er observerte.
+Rekursiv prognose innebærer at prognosefeil kan akkumuleres over horisonten,
+noe som er en metodisk asymmetri mellom XGBoost og de øvrige modellene.
 
 ## 5.2 Evalueringsmål
 
@@ -640,9 +801,15 @@ gjennomføres langs to dimensjoner:
 - **Sesongstyrke**: Styrken av sesongkomponenten beregnes fra
   STL-dekomponeringen som $F_s = \max\!\left(0,\; 1 -
   \frac{\text{Var}(R_t)}{\text{Var}(S_t + R_t)}\right)$, der $S_t$ er
-  sesongkomponenten og $R_t$ er residualen. SKU-er med $F_s \geq 0{,}64$
-  klassifiseres som «sterk sesong», øvrige som «svak sesong», i tråd med
-  terskelen benyttet i M4-konkurransen (Makridakis et al., 2022).
+  sesongkomponenten og $R_t$ er residualen. Intuitivt måler $F_s$ hvor
+  stor andel av variasjonen i tidsserien som forklares av sesongmønsteret:
+  $F_s = 1$ betyr at all variasjon er sesongdrevet, $F_s = 0$ betyr at
+  sesongkomponenten ikke bidrar utover residualstøy. SKU-er med
+  $F_s \geq 0{,}64$ klassifiseres som «sterk sesong», øvrige som «svak
+  sesong». Terskelen på 0,64 er hentet fra M4-konkurransen (Makridakis
+  et al., 2022), der den samme grensen ble brukt til å skille
+  sesongpregede fra ikke-sesongpregede tidsserier i en tilsvarende
+  komparativ evaluering.
 
 Resultatene analyseres både samlet og per undergruppe for å avdekke om
 én modell er konsistent overlegen, eller om ulike modeller er best egnet
@@ -652,7 +819,13 @@ for ulike typer varelinjer.
 
 For å vurdere om forskjellene mellom modellenes prognosepresisjon er
 statistisk signifikante, gjennomføres **Diebold-Mariano-tester**
-(Diebold & Mariano, 1995) for to sammenligningspar:
+(Diebold & Mariano, 1995) for to sammenligningspar. DM-testen brukes
+for å undersøke om forskjellen i prognosefeil mellom to modeller er
+større enn det som kan forventes av tilfeldig variasjon — med andre ord
+om én modell er systematisk bedre, eller om forskjellen like gjerne
+skyldes støy i dataene.
+
+Testen gjennomføres for:
 
 - **HW vs. ARIMA**: De to klassiske modellene med likest ytelse
   sammenlignes for å vurdere om den økte kompleksiteten i ARIMA gir
@@ -669,7 +842,7 @@ tvers av alle 105 SKU-er.
 
 # 7.0 Resultat
 
-Dette kapittelet presenterer resultatene fra den utforskende dataanalysen og sammenligningen av prognosemodellene. Resultatene presenteres objektivt og uten tolkning — tolkning og diskusjon følger i kapittel 9.0.
+Dette kapittelet presenterer resultatene fra den utforskende dataanalysen og sammenligningen av prognosemodellene. Resultatene presenteres deskriptivt med korte resultatkommentarer der det er nødvendig for å beskrive mønsteret i tabellene. Full tolkning og diskusjon følger i kapittel 8.0.
 
 ## 7.1 Utforskende dataanalyse
 
@@ -686,7 +859,7 @@ Den utforskende analysen viser at de 105 varelinjene varierer betydelig i etters
 | Andel SKU-er med positiv trend | 53,3 % |
 | Andel SKU-er med nullverdier i tidsserien | 76,2 % |
 
-*Figur 1* viser et eksempel på prognose for én varelinje sammenlignet med faktisk etterspørsel i testperioden.
+*Figur 1* viser prognosene for alle fire modeller sammenlignet med faktisk etterspørsel for én varelinje i testperioden. SKU-en er valgt rent illustrativt — den er den andre varelinjen i datasettet, ikke selektert ut fra spesifikke egenskaper som sesongstyrke eller volum. Formålet er å gi et visuelt inntrykk av hvordan modellenes prognoser forholder seg til faktisk etterspørsel i testperioden, og er ikke representativt for alle 105 SKU-er.
 
 ![Figur 1: Eksempel på prognose for én varelinje sammenlignet med faktisk etterspørsel i testperioden (Jan–Des 2025)](../004 data/figur1_eksempel_prognose.png)
 
@@ -752,12 +925,11 @@ etterspørsel i treningssettet (jf. avsnitt 6.3).
 | ARIMA | 54,91 % | 57,77 % | 61,48 % |
 | XGBoost (global) | 49,46 % | 53,32 % | 66,61 % |
 
-Et sentralt funn i Tabell 4 er at XGBoost presterer svakest på
-sesongpregede SKU-er (Tabell 3: MAPE 79,13 %), men er klart best i
-høyvolumsegmentet (MAPE 49,46 %). Holt-Winters og ARIMA viser mer stabil
-prestasjon på tvers av volumnivåer. XGBoosts volumavhengige prestasjon er
-konsistent med at den globale modellen best utnytter pooling-effekten for
-høyvolum-SKU-er med stabilt etterspørselsmønster.
+Et sentralt mønster i Tabell 4 er at XGBoost oppnår lavest MAPE i
+høyvolumsegmentet (49,46 %), men høyest MAPE blant de sesongpregede
+SKU-ene (Tabell 3: 79,13 %). Holt-Winters og ARIMA viser mer jevn
+prestasjon på tvers av volumnivåer. Hva dette mønsteret skyldes,
+diskuteres i avsnitt 8.3.
 
 ## 7.4 Statistisk test
 
@@ -784,7 +956,7 @@ Studiens problemstilling er:
 > hvilken grad varierer modellprestasjonene på tvers av
 > produktsegmenter?*
 
-Resultatene viser at XGBoost global gir lavest median MAPE på tvers av de 105 varelinjene (52,19 %), etterfulgt av ARIMA (57,77 %), Holt-Winters (62,49 %) og naiv prognose (67,50 %). XGBoost global er overlegen på alle tre feilmål — RMSE (811,24), MAE (702,95) og MAPE (52,19 %). Alle modeller forbedrer seg konsistent over den naive referanseprognosen (67,50 %).
+Resultatene viser at XGBoost global har lavest observert median MAPE på tvers av de 105 varelinjene (52,19 %), etterfulgt av ARIMA (57,77 %), Holt-Winters (62,49 %) og naiv prognose (67,50 %). XGBoost global har lavest observert prognosefeil på alle tre feilmål — RMSE (811,24), MAE (702,95) og MAPE (52,19 %) — men forskjellen mot ARIMA er ikke statistisk signifikant (DM = −0,779, p = 0,436). Alle modeller forbedrer seg konsistent over den naive referanseprognosen (67,50 %).
 
 Svaret på problemstillingen er at XGBoost global gir lavest prognosefeil under de betingelsene som er analysert. Et kontrolleksperiment med XGBoost trent individuelt per SKU — med de samme 36 treningsobservasjonene som Holt-Winters og ARIMA — gir MAPE 62,61 %, nesten identisk med Holt-Winters (62,49 %) og klart svakere enn global XGBoost. Dette bekrefter at global pooling er den primære kilden til XGBoosts fordel, ikke gradient boosting-arkitekturen alene. Funnet diskuteres videre i avsnitt 8.3.
 
@@ -802,9 +974,9 @@ Resultatene støtter eksisterende forskning på feltet.
 
 Fourkiotis og Tsadiras (2024) finner at XGBoost typisk gir lavere prognosefeil enn tradisjonelle statistiske modeller på farmasøytiske salgsdata. Dette er konsistent med funnene i denne studien, der XGBoost gir en MAPE-forbedring på 15,53 prosentpoeng sammenlignet med den naive prognosen og 10,52 prosentpoeng over Holt-Winters. Forbedringen er imidlertid moderat, og de klassiske modellene (Holt-Winters og ARIMA) presterer fortsatt vesentlig bedre enn referansenivået.
 
-Burinskiene (2022) påpeker at datakvalitet og struktureringsnivå er like viktig som modellvalg. Dette er relevant for forståelsen av hvorfor Holt-Winters og ARIMA yter relativt godt på dette datasettet: leveransedataene fra et sentrallager-grossist-system har en relativt stabil struktur med begrenset støy, noe som favoriserer klassiske tidsseriemodeller.
+Burinskiene (2020) påpeker at datakvalitet og struktureringsnivå er like viktig som modellvalg. Dette er relevant for forståelsen av hvorfor Holt-Winters og ARIMA yter relativt godt på dette datasettet: leveransedataene fra et sentrallager-grossist-system har en relativt stabil struktur med begrenset støy, noe som favoriserer klassiske tidsseriemodeller.
 
-Absoluttnivåene for MAPE (52–68 %) er høye sammenlignet med hva som rapporteres for forbruksvarer med stabil etterspørsel, men er i tråd med Burinskiene (2022), som rapporterer tilsvarende nivåer for farmasøytiske data kjennetegnet av høy etterspørselsvariabilitet og et høyt innslag av lavvolum-produkter. I dette perspektivet bør modellsammenligningen primært tolkes relativt — rangordningen mellom modellene er den sentrale konklusjonen, ikke absoluttverdiene.
+Absoluttnivåene for MAPE (52–68 %) er høye sammenlignet med hva som rapporteres for forbruksvarer med stabil etterspørsel, men er i tråd med Burinskiene (2020), som rapporterer tilsvarende nivåer for farmasøytiske data kjennetegnet av høy etterspørselsvariabilitet og et høyt innslag av lavvolum-produkter. I dette perspektivet bør modellsammenligningen primært tolkes relativt — rangordningen mellom modellene er den sentrale konklusjonen, ikke absoluttverdiene.
 
 Zhu et al. (2021) demonstrerer at maskinlæringsmodeller som kombinerer historiske salgsdata med forsyningskjedeinformasjon gir signifikante forbedringer i prognosepresisjon for farmasøytiske produkter. XGBoost i denne studien benytter kun historiske leveranseverdier uten eksogene variabler som bestillingsdata, kampanjekalendere eller epidemiologiske indikatorer. Funnene kan dermed tolkes som en konservativ nedre grense for hva maskinlæringsmetoder kan oppnå på dette datasettet — tilgang på rikere forsyningskjededata ville trolig ha styrket XGBoosts relative fordel ytterligere.
 
@@ -820,9 +992,9 @@ Et sentralt spørsmål i litteraturen er om økt modellkompleksitet gir reell me
 
 En sentral metodisk presisering er at den globale XGBoost-modellen og de individuelle statistiske modellene opererer på fundamentalt ulike treningsgrunnlag: global XGBoost trenes på 3 780 observasjoner (105 SKU-er × 36 måneder), mens Holt-Winters og ARIMA tilpasses individuelt på 36 observasjoner per modell. For å isolere effekten av modellarkitektur fra effekten av global datautnyttelse ble XGBoost i denne studien også trent individuelt per SKU — 105 separate modeller, hver med de samme 36 treningsobservasjonene som Holt-Winters og ARIMA. Med lagg 1–12 gir dette kun ~24 brukbare treningsrader per modell.
 
-Resultatet er entydig: XGBoost individuell oppnår median MAPE 62,61 %, nesten identisk med Holt-Winters (62,49 %) og klart svakere enn global XGBoost (52,19 %). Gradient boosting-arkitekturen alene forklarer dermed ikke XGBoosts fordel. Det som skiller global XGBoost fra de øvrige metodene, er muligheten til å låne mønstre på tvers av produktporteføljen — den økte datautnyttelsen fra pooling, ikke algoritmen som sådan. Bidraget fra dette kontrolleksperimentet er å demonstrere at global maskinlæring *som pakke* — inkludert den økte datautnyttelsen — gir observert bedre presisjon, og at pooling-effekten er en reell og kvantifiserbar komponent av XGBoosts relative overlegenhet på dette datasettet.
+Resultatet er entydig: XGBoost individuell oppnår median MAPE 62,61 %, nesten identisk med Holt-Winters (62,49 %) og klart svakere enn global XGBoost (52,19 %). Gradient boosting-arkitekturen alene forklarer dermed ikke XGBoosts fordel. Det som skiller global XGBoost fra de øvrige metodene, er muligheten til å låne mønstre på tvers av produktporteføljen — den økte datautnyttelsen fra pooling, ikke algoritmen som sådan. Bidraget fra dette kontrolleksperimentet er å demonstrere at global maskinlæring *som pakke* — inkludert den økte datautnyttelsen — gir observert bedre presisjon, og at pooling-effekten er en reell og kvantifiserbar komponent av XGBoosts relative fordel på dette datasettet.
 
-For virksomheter med tilgjengelig datakompetanse og Python-infrastruktur vil XGBoost være et godt valg. For virksomheter med begrensede analytiske ressurser vil Holt-Winters gi tilfredsstillende prognoser med langt lavere krav til vedlikehold og tolkning. Dette er særlig relevant i farmasøytisk distribusjon, hvor leveringspålitelighet og forutsigbarhet veier tyngre enn marginal presisjonsgevinst.
+For virksomheter med tilgjengelig datakompetanse og Python-infrastruktur kan XGBoost vurderes, særlig dersom porteføljen er bred nok til å utnytte pooling-effekten. For virksomheter med begrensede analytiske ressurser vil Holt-Winters gi tilfredsstillende prognoser med langt lavere krav til vedlikehold og tolkning. Dette er særlig relevant i farmasøytisk distribusjon, hvor leveringspålitelighet og forutsigbarhet veier tyngre enn marginal presisjonsgevinst.
 
 Videre er det verdt å merke seg at ARIMA ikke gir signifikant bedre prognoser enn Holt-Winters (DM = 1,766, p = 0,078), noe som taler mot den ekstra modelltilpasningskostnaden ARIMA krever i form av parametervalg og stasjonaritetstesting.
 
@@ -842,20 +1014,46 @@ Studien har flere begrensninger som bør tas i betraktning ved tolkning av resul
 
 For virksomheter i farmasøytisk distribusjon med tilsvarende datastruktur gir studien følgende praktiske implikasjoner:
 
-- **XGBoost** anbefales som prognosemodell der datakompetanse og Python-infrastruktur er tilgjengelig, særlig for virksomheter med mange SKU-er som kan dra nytte av en global modell.
-- **Holt-Winters** anbefales som et robust og enkelt alternativ for virksomheter uten avansert analysekapasitet — modellen gir akseptabel presisjon og er lett å implementere og vedlikeholde.
+- **XGBoost (global)** kan vurderes der datakompetanse og Python-infrastruktur er tilgjengelig, og der virksomheten har mange SKU-er som kan utnytte pooling-effekten. Det understrekes at fordelen over ARIMA ikke er statistisk signifikant på dette datasettet, og at XGBoost bør testes opp mot egne data før implementering.
+- **Holt-Winters** anbefales som standardmodell for virksomheter uten avansert analysekapasitet — modellen gir akseptabel presisjon, er lett å implementere og vedlikeholde, og presterer stabilt på tvers av segmenter.
+- **For SKU-er med tydelig sesongmønster** bør Holt-Winters eller ARIMA vurderes fremfor global XGBoost, da XGBoost presterer svakest i dette segmentet (MAPE 79,13 % versus Holt-Winters 65,82 %).
 - Det er ikke grunnlag for å foretrekke ARIMA over Holt-Winters på dette datasettet, gitt at Diebold-Mariano-testen ikke viser signifikant forskjell og ARIMA krever mer kompleks modelltilpasning.
 - For varelinjer med lavt volum eller uregelmessig etterspørsel bør prognosene suppleres med manuell vurdering, da alle modeller viser høyere prognosefeil i denne gruppen.
 
 # 9.0 Konklusjon
 
-Studien sammenlignet fem prognosemodeller — naiv sesongprognose, Holt-Winters eksponentiell glatting, ARIMA, XGBoost global og XGBoost individuell — på et anonymisert datasett med 105 farmasøytiske varelinjer over 48 måneder, med treningssett 2022–2024 og testperiode januar–desember 2025.
+Studien sammenlignet fem prognosemodeller på et anonymisert datasett
+med 105 farmasøytiske varelinjer over 48 måneder (treningssett
+2022–2024, testperiode januar–desember 2025).
 
-De tre underspørsmålene besvares som følger. **RQ1**: XGBoost global gir lavest prognosefeil på samtlige tre feilmål — RMSE (811,24), MAE (702,95) og MAPE (52,19 %) — og rangerer høyest blant de testede modellene. ARIMA (MAPE 57,77 %) og Holt-Winters (MAPE 62,49 %) presterer begge klart bedre enn den naive referansen (MAPE 67,50 %). **RQ2**: Modellprestasjonene varierer tydelig mellom segmenter. XGBoost global er klart best for høyvolumsegmentet (MAPE 49,46 %) og for SKU-er uten tydelig sesongmønster (MAPE 51,50 %), men er svakest for SKU-er med tydelig sesongmønster (MAPE 79,13 %), der ARIMA (69,86 %) og Holt-Winters (65,82 %) er mer robuste. **RQ3**: DM-testen mellom Holt-Winters og ARIMA er ikke signifikant (DM = 1,766, p = 0,078), og XGBoost skiller seg heller ikke signifikant fra ARIMA (DM = −0,779, p = 0,436). Den observerte rangordningen bør tolkes som en indikasjon, ikke en sikker konklusjon.
+**RQ1:** XGBoost global har lavest observert prognosefeil på alle tre
+feilmål — RMSE (811,24), MAE (702,95) og MAPE (52,19 %) — men
+forskjellen mot ARIMA er ikke statistisk signifikant (DM = −0,779,
+p = 0,436). Alle modeller forbedrer seg over den naive referansen
+(MAPE 67,50 %).
 
-Et kontrolleksperiment med XGBoost trent individuelt per SKU (MAPE 62,61 %) — med de samme 36 treningsobservasjonene som Holt-Winters og ARIMA — bekrefter at global pooling er den primære årsaken til XGBoosts fordel, ikke gradient boosting-arkitekturen alene. Med individuell trening presterer XGBoost omtrent på nivå med Holt-Winters.
+**RQ2:** Modellprestasjonene varierer tydelig mellom segmenter.
+XGBoost er sterkest for høyvolumsegmentet (MAPE 49,46 %) og
+ikke-sesongpregede SKU-er (MAPE 51,50 %), men svakest for SKU-er
+med tydelig sesongmønster (MAPE 79,13 %), der Holt-Winters (65,82 %)
+og ARIMA (69,86 %) er mer robuste.
 
-Studiens faglige bidrag er firedelt: (1) den viser at XGBoost som global modell gir observert forbedring over klassiske tidsseriemodeller, men DM-testen bekrefter ikke statistisk signifikant overlegenhet over ARIMA (p = 0,436), (2) den dokumenterer at modellprestasjonene varierer systematisk mellom segmenter — XGBoost er sterkest for høyvolum og ikke-sesongpregede SKU-er, mens ARIMA og Holt-Winters er mer robuste for sesongpregede produkter — (3) den bekrefter ved DM-test at ingen av de testede modellparene skiller seg signifikant fra hverandre, og (4) kontrolleksperimentet med individuell XGBoost isolerer pooling-effekten og viser at global datautnyttelse — ikke modellarkitekturen — forklarer XGBoosts relative fordel. For praktikere i farmasøytisk distribusjon er konklusjonen at Holt-Winters er et robust alternativ med lav implementeringskostnad, og at XGBoost gir reell merverdi primært for virksomheter med datakompetanse og høyvolum-produktporteføljer som kan utnytte global pooling.
+**RQ3:** Ingen av de testede modellparene skiller seg statistisk
+signifikant fra hverandre i DM-test. Økt modellkompleksitet gir
+observert, men ikke signifikant bekreftet, merverdi på dette datasettet.
+
+Et kontrolleksperiment der XGBoost ble trent individuelt per SKU
+(MAPE 62,61 %) — med de samme 36 treningsobservasjonene som
+Holt-Winters og ARIMA — bekrefter at global pooling er den primære
+årsaken til XGBoosts fordel, ikke gradient boosting-arkitekturen alene.
+
+Hovedkonklusjonen er ikke at XGBoost alltid er best, men at global
+datadeling på tvers av SKU-er kan gi merverdi når hver enkelt tidsserie
+er kort. Samtidig viser manglende statistisk signifikans at praktisk
+modellvalg bør baseres på en kombinasjon av prognosepresisjon,
+implementeringskompleksitet og organisatorisk gjennomførbarhet — der
+Holt-Winters fremstår som et robust og lavterskel-alternativ for
+virksomheter uten avansert analysekapasitet.
 
 ## 9.1 Videre forskning
 
@@ -866,27 +1064,28 @@ Denne studien reiser flere spørsmål som kan være utgangspunkt for videre fors
 - **Hybrid-modeller:** Kombinasjoner av klassiske og maskinlæringsbaserte metoder er et voksende forskningsfelt som kan gi bedre resultater enn enkeltstående modeller.
 - **Eksogene variabler:** Inkludering av eksterne faktorer som sesonginfluensa, legemiddelmangel eller regulatoriske endringer kan forbedre prognosenøyaktigheten for utvalgte produktkategorier.
 - **Global versus individuell pooling for andre modeller:** Kontrolleksperimentet i denne studien bekrefter at global pooling er den primære årsaken til XGBoosts fordel. Et naturlig neste steg er å undersøke om globale varianter av Holt-Winters eller ARIMA (f.eks. hierarkisk prognosering eller vektorautoregresjon) gir tilsvarende gevinst — dette ville gjøre det mulig å sammenligne modellarkitekturer direkte uten confounding fra ulik treningsdatamengde.
+- **AI som forskningsmetode:** Fremtidige studier kan undersøke hvordan AI-verktøy påvirker kvalitet, effektivitet og forskerens kontroll i kvantitative forskningsprosjekter — herunder i hvilken grad human-in-the-loop-tilnærminger sikrer metodisk integritet og reproduserbarhet i analysearbeid.
 
 # 10.0 Bibliografi
-
-Bryman, A. (2012). *Social research methods* (4th ed.). Oxford
-University Press.
-
-Cleveland, R. B., Cleveland, W. S., McRae, J. E., & Terpenning, I.
-(1990). STL: A seasonal-trend decomposition procedure based on Loess.
-*Journal of Official Statistics, 6*(1), 3--73.
 
 Box, G. E. P., Jenkins, G. M., Reinsel, G. C., & Ljung, G. M. (2015).
 *Time series analysis: Forecasting and control* (5th ed.). Wiley.
 
-Burinskiene, A. (2022). Forecasting model: The case of the
-pharmaceutical retail. *Frontiers in Medicine, 9*, 582186.
+Bryman, A. (2012). *Social research methods* (4th ed.). Oxford
+University Press.
+
+Burinskiene, A. (2020). Forecasting model: The case of the
+pharmaceutical retail. *Frontiers in Medicine, 7*, 582186.
 <https://doi.org/10.3389/fmed.2020.582186>
 
 Chen, T., & Guestrin, C. (2016). XGBoost: A scalable tree boosting
 system. In *Proceedings of the 22nd ACM SIGKDD International Conference
 on Knowledge Discovery and Data Mining* (pp. 785--794). Association for
 Computing Machinery. <https://doi.org/10.1145/2939672.2939785>
+
+Cleveland, R. B., Cleveland, W. S., McRae, J. E., & Terpenning, I.
+(1990). STL: A seasonal-trend decomposition procedure based on Loess.
+*Journal of Official Statistics, 6*(1), 3--73.
 
 Diebold, F. X., & Mariano, R. S. (1995). Comparing predictive accuracy.
 *Journal of Business & Economic Statistics, 13*(3), 253--263.
@@ -900,27 +1099,30 @@ predictions. *Forecasting, 6*(1), 170--186.
 Hyndman, R. J., & Athanasopoulos, G. (2021). *Forecasting: Principles
 and practice* (3rd ed.). OTexts. <https://otexts.com/fpp3/>
 
+Hyndman, R. J., & Koehler, A. B. (2006). Another look at measures of
+forecast accuracy. *International Journal of Forecasting, 22*(4),
+679--688. <https://doi.org/10.1016/j.ijforecast.2006.03.001>
+
 Lee, H. L., Padmanabhan, V., & Whang, S. (1997). The bullwhip effect
 in supply chains. *Sloan Management Review, 38*(3), 93--102.
 
-Lov om apotek (apotekloven). (2000). *Lov om apotek
-(LOV-2000-06-02-39).* <https://lovdata.no/dokument/NL/lov/2000-06-02-39>
+Lov om apotek [apotekloven], LOV-2000-06-02-39. (2000). Lovdata.
+<https://lovdata.no/dokument/NL/lov/2000-06-02-39>
 
 Makridakis, S., Spiliotis, E., & Assimakopoulos, V. (2022). M5 accuracy
 competition: Results, findings, and conclusions. *International Journal
 of Forecasting, 38*(4), 1346--1364.
 <https://doi.org/10.1016/j.ijforecast.2021.11.013>
 
-Said, S. E., & Dickey, D. A. (1984). Testing for unit roots in
-autoregressive-moving average models of unknown order. *Biometrika,
-71*(3), 599--607. <https://doi.org/10.1093/biomet/71.3.599>
-
 Petropoulos, F., Spiliotis, E., & Assimakopoulos, V. (2022).
 Forecasting: Theory and practice. *International Journal of Forecasting,
 38*(3), 705--871. <https://doi.org/10.1016/j.ijforecast.2021.11.001>
 
-Statens legemiddelverk. (2024). *Årsrapport 2023*. Statens
-legemiddelverk.
+Said, S. E., & Dickey, D. A. (1984). Testing for unit roots in
+autoregressive-moving average models of unknown order. *Biometrika,
+71*(3), 599--607. <https://doi.org/10.1093/biomet/71.3.599>
+
+Statens legemiddelverk. (2024). *Årsrapport 2023*.
 <https://www.regjeringen.no/contentassets/d68bf504a21a4645b3c04ef31697fd6c/slv-arsrapport-2023.pdf>
 
 Zhu, X., Ninh, A., Zhao, H., & Liu, Z. (2021). Demand forecasting with
@@ -978,3 +1180,70 @@ Datasettet `salgsdata_anonymized.csv` inneholder følgende struktur:
 
 Datasettet er anonymisert og kan ikke gjøres offentlig tilgjengelig.
 Tilsvarende analyser kan gjennomføres på datasett med identisk struktur.
+
+## Vedlegg D: XGBoost global versus XGBoost individuell — pooling-effekten forklart
+
+### D.1 Bakgrunn og formål
+
+XGBoost ble i denne studien implementert på to fundamentalt ulike måter: som én global modell trent på alle 105 SKU-er samlet (*global pooling*), og som 105 separate modeller trent individuelt per SKU. Begge varianter bruker identiske featurevektorer, identiske hyperparametere og identisk evalueringsrammeverk. Den eneste systematiske forskjellen er mengden treningsdata modellen har tilgang til. Formålet med dette vedlegget er å tydeliggjøre hva denne forskjellen innebærer metodisk, og å dokumentere den kvantifiserte effekten på prognosepresisjon.
+
+### D.2 To fundamentalt ulike treningsstrategier
+
+Tabellen nedenfor sammenligner treningsbetingelsene for de to XGBoost-variantene.
+
+**Tabell D.1: Treningsbetingelser — XGBoost global versus XGBoost individuell**
+
+| Betingelse | XGBoost global | XGBoost individuell |
+|---|---|---|
+| Antall modeller | 1 | 105 |
+| Treningsstrategi | Alle 105 SKU-er poolet | Én separat modell per SKU |
+| Treningsobservasjoner totalt | 3 780 (105 × 36 mnd) | 36 per modell |
+| Brukbare treningsrader etter lagg 1–12 | ~2 520 (105 × 24) | ~24 per modell |
+| Featurevektorer | Identiske | Identiske |
+| Hyperparametere | Identiske (n=300, lr=0,05, depth=4) | Identiske |
+| Kan lære mønstre på tvers av SKU-er | Ja | Nei |
+| Risiko for overfit på enkelt-SKU | Lav | Høy |
+
+Den kritiske forskjellen ligger i fjerde rad: den globale modellen har tilgang til ~2 520 brukbare treningsrader fra hele porteføljen, mens hver individuell modell kun har ~24 treningsrader til rådighet etter at laggstrukturen er etablert. For en trebasert ensemblemetode som XGBoost — som i utgangspunktet er designet for store datasett — er 24 observasjoner et svært begrenset grunnlag.
+
+### D.3 Hvorfor global trening er viktig for trebaserte modeller
+
+Gradient boosting-metoder som XGBoost lærer komplekse, ikke-lineære mønstre ved å bygge mange beslutningstrær sekvensielt. Effektiviteten til denne tilnærmingen avhenger kritisk av at det finnes tilstrekkelig med treningsdata til å estimere stabile splittepunkter i hvert tre. Med kun ~24 treningsrader per individuell modell oppstår to problemer:
+
+**Datamangel og overfitting:** Et beslutningstre med `max_depth = 4` kan i prinsippet representere $2^4 = 16$ bladnoder. Med 24 treningsrader gir dette svært få observasjoner per bladnode. Selv med regularisering ($\lambda$-straff på bladvekter) er dette et grunnleggende problem: modellen har for lite data til å skille reelle mønstre fra støy, og risikerer å memorere treningssettet fremfor å generalisere til testperioden.
+
+**Manglende tverrproduktlæring:** Mange av de 105 SKU-ene deler strukturelle likhetstrekk — sesongmønstre, trendretning og reaksjoner på tidspunkter som kvartalsslutt eller vinterhalvår. Den globale modellen kan lære disse delte mønstrene fra hele porteføljen og anvende dem på alle SKU-er, inkludert produkter der det individuelle datamaterialet er sparsomt. Den individuelle modellen er blind for denne informasjonen og må estimere alle mønstre fra egne 24 observasjoner alene.
+
+**Pooling som informasjonsdeling:** I prognosesammenheng er global pooling beslektet med hierarkisk prognosering og cross-learning — prinsipper som har vist sterk empirisk støtte i M5-konkurransen (Makridakis et al., 2022), der de best plasserte løsningene nettopp utnyttet mønstre på tvers av produkter fremfor å modellere hvert produkt isolert.
+
+### D.4 Kvantifisering av pooling-effekten
+
+*Figur D.1* illustrerer treningsstrategiene og prestasjonsforskjellen visuelt. Panel A viser skjematisk at individuell trening gir 105 separate modeller med ~24 treningsrader hver, mens global trening pooler all data til én modell med ~2 520 treningsrader. Panel B viser median MAPE for alle fem modeller med pooling-effekten annotert.
+
+![Figur D.1: XGBoost global versus XGBoost individuell — treningsstrategi og pooling-effekt](../004 data/figur_vedlegg_d_pooling.png)
+
+Tabell D.2 sammenligner prestasjonene for de to XGBoost-variantene direkte opp mot hverandre og mot de øvrige modellene i studien.
+
+**Tabell D.2: Prestasjonssammenligning — XGBoost global og XGBoost individuell (median over 105 SKU-er, testperiode Jan–Des 2025)**
+
+| Modell | RMSE | MAE | MAPE (%) | Relativ MAPE vs. XGB global |
+|--------|------|-----|----------|----------------------------|
+| Naiv (sesongnaiv) | 1 131,65 | 914,58 | 67,50 | +15,31 pp |
+| Holt-Winters | 935,84 | 769,90 | 62,49 | +10,30 pp |
+| **XGBoost individuell** | **949,67** | **845,80** | **62,61** | **+10,42 pp** |
+| ARIMA / SARIMA | 846,20 | 820,01 | 57,77 | +5,58 pp |
+| **XGBoost global** | **811,24** | **702,95** | **52,19** | — |
+
+*pp = prosentpoeng*
+
+Tre observasjoner er sentrale ved lesing av tabellen:
+
+1. **XGBoost individuell presterer tilnærmet identisk med Holt-Winters** (MAPE 62,61 % versus 62,49 %). En statistisk modell spesialbygd for sesongvariasjon og en generell maskinlæringsmodell med 24 treningsrader per SKU gir altså nesten nøyaktig samme resultat. Dette bekrefter at gradient boosting-arkitekturen i seg selv ikke gir noen fordel når datagrunnlaget er tilsvarende.
+
+2. **Gapet mellom XGBoost individuell og XGBoost global er 10,42 prosentpoeng i MAPE**, et like stort gap som mellom naiv prognose og Holt-Winters. Den eneste variabelen som skiller de to XGBoost-variantene er tilgangen til poolet treningsdata — og effekten er substansiell.
+
+3. **XGBoost global oppnår lavere RMSE og MAE enn alle øvrige modeller**, men den relative forbedringen er størst i RMSE (17,1 % lavere enn XGBoost individuell) og MAE (20,3 % lavere). Dette indikerer at den globale modellen i særlig grad reduserer de store prognoseavvikene som RMSE er sensitiv for.
+
+### D.5 Konklusjon
+
+Kontrolleksperimentet med XGBoost individuell isolerer pooling-effekten og viser at den er den primære årsaken til XGBoost globals relative overlegenhet i denne studien. Gradient boosting-algoritmen alene — uten tilgang til porteføljens samlede historikk — gir ikke bedre prognoser enn Holt-Winters på et datasett med 36 måneder per SKU. Global trening er dermed ikke bare en teknisk implementasjonsdetalj, men en forutsetning for at XGBoost skal gi reell merverdi i kontekster med kort dataserier og mange produktlinjer. For praktikere innebærer dette at effekten av XGBoost er betinget av at virksomheten har en tilstrekkelig bred produktportefølje med felles historikk å trene på — et poeng som er like relevant som valget av algoritme.
