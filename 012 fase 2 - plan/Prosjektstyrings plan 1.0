@@ -1,4 +1,4 @@
-# Prosjektstyringsplan [Versjon 3.0]{.mark}
+# Prosjektstyringsplan [Versjon 3.1]{.mark}
 
 **Analyserer av historiske salgsdata for å utvikle en modell for
 månedlig etterspørselsprognose.**
@@ -37,6 +37,11 @@ Bedrift: Importør av legemidler
                          avkryssingsbokser; milepæl-
                          status oppdatert; suksess-
                          kriterium-avvik dokumentert
+
+  3.1       2026-05-09   Milepælsstatus oppdatert med    —
+                         faktiske utfall; suksess-
+                         kriteriene merket med status;
+                         1.3 Kunde rettet til 1.4
   -----------------------------------------------------------------------
 
 1 Sammendrag
@@ -89,7 +94,7 @@ leveranser av farmasøytiske varelinjer i et
 sentrallager--grossist-system, gitt et datasett på 48 måneder og 105
 produkter?
 
-1.3 Kunde
+1.4 Kunde
 
 Kunden i prosjektet er primært den virksomheten som datasettet
 representerer. Både datasett og bedrift er anonymisert. I praksis
@@ -215,19 +220,29 @@ suksesskriterier definert:
 
 -   Median MAPE for testperioden (siste 12 måneder) er under 30 % for
     minst én av de implementerte modellene.
+    **Status: Ikke oppnådd.** Beste resultat er XGBoost global med
+    52,19 %. Avviket skyldes høy variabilitet og lavvolum-dominans i
+    datasettet. Kriteriet var satt før utforskende dataanalyse avdekket
+    dette; se avsnitt 8.4 i rapporten.
 
 -   Den beste modellen oppnår lavere RMSE enn naiv sesongprognose for
     minst 50 % av de 105 SKU-ene.
+    **Status: Oppnådd.** XGBoost global RMSE 811 mot naiv 1131 (median).
+    Alle tre ikke-naive modeller slår naiv på median RMSE.
 
 -   Alle fire prognosemodeller (Naiv, Holt-Winters, ARIMA/SARIMA,
     XGBoost) er implementert og evaluert med samme evalueringsrammeverk.
+    **Status: Oppnådd.**
 
 -   Analysen er fullt reproduserbar: fast random seed (42), faste
     train/test-split (36/12 måneder) og all kode er versjonskontrollert
     i Git.
+    **Status: Oppnådd.**
 
 -   Rapporten er ferdigstilt og godkjent av peer review innen
     2026-04-29.
+    **Status: Oppnådd.** Rapport ferdigstilt; peer review gjennomført
+    innen fristen.
 
 Disse kriteriene er direkte knyttet til kravene REQ-001 til REQ-006 og
 brukes som grunnlag for kvalitetsvurdering i seksjon 3.6.
@@ -388,13 +403,13 @@ Fase 4: avslutning i mai 2026
   Første analyse     Første runde med modellering og  2026-03-25   Oppnådd
   gjennomført        foreløpige resultater
 
-  Prognosemodell     Valgt modell implementert og     2026-04-10   Planlagt
+  Prognosemodell     Valgt modell implementert og     2026-04-10   Oppnådd
   ferdigstilt        validert
 
-  Rapportutkast      Første fullstendige utkast av    2026-04-27   Planlagt
+  Rapportutkast      Første fullstendige utkast av    2026-04-27   Oppnådd
   ferdig             rapport
 
-  Peer review        Fagfellevurdering mottatt og     2026-04-29   Planlagt
+  Peer review        Fagfellevurdering mottatt og     2026-04-29   Oppnådd
   gjennomført        vurdert
 
   Endelig rapport    Endelig versjon av rapport       2026-05-31   Planlagt

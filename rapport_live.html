@@ -9,7 +9,7 @@
   <style>
     img { max-width: 100%; height: auto; display: block; margin: 1em auto; }
     figure { margin: 1.5em 0; }
-    figcaption { text-align: center; font-style: italic; font-size: 0.9em; margin-top: 0.5em; }
+    figcaption { text-align: center; font-style: normal; font-size: 0.9em; margin-top: 0.5em; }
   </style>
   <script>
     window.MathJax = {
@@ -21,6 +21,7 @@
 </head>
 <body>
   <div class="container">
+<div class="abstract">
 <p><strong>Abstract</strong></p>
 <p><strong>Student:</strong> Morten Eidsvåg | <strong>Emne:</strong>
 LOG650 Forskningsprosjekt | <strong>Arbeidsform:</strong>
@@ -38,6 +39,8 @@ siste 12 månedene ved hjelp av feilmålene RMSE, MAE og MAPE (median over
 alle SKU-er).</p>
 <p>Resultatene viser at XGBoost global gir lavest samlet prognosefeil (MAPE: 52,19 %; RMSE: 811,24; MAE: 702,95), etterfulgt av ARIMA (MAPE: 57,77 %), Holt-Winters (MAPE: 62,49 %) og naiv prognose (MAPE: 67,50 %). Diebold-Mariano-tester viser ingen statistisk signifikant forskjell mellom Holt-Winters og ARIMA (DM = 1,766, p = 0,078) eller mellom XGBoost og ARIMA (DM = −0,779, p = 0,436). Segmentert analyse viser at XGBoost er klart best for SKU-er uten tydelig sesongmønster (MAPE: 51,50 %) og for varelinjer med høyt volum (MAPE: 49,46 %), men presterer svakest for SKU-er med tydelig sesongmønster (79,13 %), der ARIMA og Holt-Winters er mer robuste. Som kontrolleksperiment ble XGBoost også trent individuelt per SKU, med de samme 36 treningsobservasjonene som Holt-Winters og ARIMA. XGBoost individuell oppnår MAPE 62,61 % — nesten identisk med Holt-Winters (62,49 %) og klart svakere enn global XGBoost. Dette bekrefter at den globale treningsstrategien (pooling) er den primære årsaken til XGBoosts fordel, ikke gradient boosting-arkitekturen alene.</p>
 <p>Studien bidrar med fire funn: (1) XGBoost som global modell gir observert forbedring over klassiske tidsseriemodeller (MAPE 52,19 % mot 62,49 % for Holt-Winters), men DM-testen bekrefter ikke statistisk signifikant forskjell fra ARIMA (p = 0,436), slik at rangordningen bør tolkes som en indikasjon; (2) modellprestasjonene varierer systematisk mellom segmenter — XGBoost er sterkest for ikke-sesongpreget og høyvolumsegmentet, men svakest for sesongpregede produkter, der ARIMA er best; (3) ingen av de testede modellparene skiller seg signifikant fra hverandre i DM-test; og (4) et kontrolleksperiment med XGBoost trent individuelt per SKU (MAPE 62,61 %) bekrefter at global pooling — ikke modellarkitekturen — forklarer XGBoosts fordel. For virksomheter uten avansert analysekapasitet er Holt-Winters et robust alternativ med lav implementeringskostnad.</p>
+</div>
+<div class="toc">
 <p><strong>Innhold</strong></p>
 <p>1.0 Innledning<br />
     1.1 Problemstilling<br />
@@ -55,6 +58,7 @@ alle SKU-er).</p>
 9.0 Konklusjon<br />
 10.0 Bibliografi<br />
 Vedlegg</p>
+</div>
 <h1 class="unnumbered" id="innledning">1.0 Innledning</h1>
 <p>Etterspørselsprognoser er sentrale i beslutningsprosessene innen
 logistikk og supply chain management. Prognoser danner grunnlaget for
@@ -721,11 +725,9 @@ fanger opp sesongstrukturen direkte. Mellomliggende lagg 4–11 beholdes fordi
 ACF-analysen viser at lagg 4 (|ACF| = 0,136) har høyere gjennomsnittlig autokorrelasjon
 enn lagg 12 (|ACF| = 0,095) — å ekskludere disse ville fjerne informasjon som er
 viktig for modellens evne til å fange opp sesongdynamikk. <span
-class="math inline">\(	ext{måned}_t \in \{1,\ldots,12\}\)</span> er en
+class="math inline">\(\text{måned}_t \in \{1,\ldots,12\}\)</span> er en
 kategorisk sesongindikator, og <span class="math inline">\(t\)</span> er en lineær
 tidsindeks for trend.</p>
-class="math inline">\(y_{t-12}\)</span>, og <span
-class="math inline">\(t\)</span> er en lineær tidsindeks for trend.</p>
 <p>Modellen trenes som en <strong>global modell</strong> på alle 105
 varelinjer samlet, noe som gjør det mulig å utnytte mønstre på tvers av
 produkter. Hyperparametrene — antall trær (<code>n_estimators</code>),
@@ -1588,5 +1590,10 @@ struktur.</p>
 <p>Beste CV-RMSE: 3 652,53. Den valgte konfigurasjonen (n_estimators = 100, learning_rate = 0,05, max_depth = 3) representerer en relativt grunn og konservativ modell, noe som reflekterer det begrensede treningsdatagrunnlaget (36 måneder per varelinje). Lav max_depth og få trær reduserer overfitting-risikoen på et datasett med 3 780 treningsobservasjoner totalt.</p>
 
   </div>
+<script>
+  document.querySelectorAll('figcaption').forEach(function(fc) {
+    fc.innerHTML = fc.innerHTML.replace(/^((?:Figur|Tabell)\s+\d+:)/, '<strong>$1</strong>');
+  });
+</script>
 </body>
 </html>
