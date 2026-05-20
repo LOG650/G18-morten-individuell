@@ -1,0 +1,9 @@
+Segment,Modell,Median_MAPE,N_SKU
+Tydelig sesong,Naiv,71.92,18
+Tydelig sesong,Holt-Winters,65.82,18
+Tydelig sesong,ARIMA,69.86,18
+Tydelig sesong,XGBoost,79.13,18
+Svak/ingen sesong,Naiv,67.49,87
+Svak/ingen sesong,Holt-Winters,61.01,87
+Svak/ingen sesong,ARIMA,56.52,87
+Svak/ingen sesong,XGBoost,51.5,87

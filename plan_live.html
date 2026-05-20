@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prosjektstyringsplan LOG650</title>
+  <link rel="stylesheet" href="plan_style.css">
+</head>
+<body>
+  <div class="container">
+<h1 id="prosjektstyringsplan-versjon-3.1">Prosjektstyringsplan
+<mark>Versjon 3.1</mark></h1>
+<p><strong>Analyserer av historiske salgsdata for å utvikle en modell
+for månedlig etterspørselsprognose.</strong></p>
+<p>Emne: LOG650 – Forskningsprosjekt: Logistikk og kunstig
+intelligens</p>
+<p>Dato: 16.04.2026</p>
+<p>Utarbeidet av: Morten Eidsvåg</p>
+<p>Institusjon: Høgskolen i Molde</p>
+<p>Veileder: Bård Inge Austigard Pedersen</p>
+<p>Kontaktperson: Erik Langlo</p>
+<p>Bedrift: Importør av legemidler</p>
+<p><strong>Versjonslogg</strong></p>
+<table style="width:97%;">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 17%" />
+<col style="width: 44%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Versjon</th>
+<th style="text-align: left;">Dato</th>
+<th style="text-align: left;">Endring</th>
+<th style="text-align: left;">Godkjent av</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">1.0</td>
+<td style="text-align: left;">2026-02-01</td>
+<td style="text-align: left;">Første utkast —</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">2.0</td>
+<td style="text-align: left;">2026-03-09</td>
+<td style="text-align: left;">Revidert etter veiledning; omfang, risiko
+og milepæler oppdatert</td>
+<td style="text-align: left;">BAP</td>
+</tr>
+<tr>
+<td style="text-align: left;">2.1</td>
+<td style="text-align: left;">2026-04-08</td>
+<td style="text-align: left;">Kvantitativ risikovurdering, målbare
+suksesskriterier, RACI-matrise og dataforvaltningsplan lagt til</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">3.0</td>
+<td style="text-align: left;">2026-04-16</td>
+<td style="text-align: left;">WBS oppdatert med — avkryssingsbokser;
+milepæl- status oppdatert; suksess- kriterium-avvik dokumentert</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">3.1</td>
+<td style="text-align: left;">2026-05-09</td>
+<td style="text-align: left;">Milepælsstatus oppdatert med — faktiske
+utfall; suksess- kriteriene merket med status; 1.3 Kunde rettet til
+1.4</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p>1 Sammendrag</p>
+<p>Dette dokumentet utgjør prosjektstyringsplanen for
+etterspørselsprognoseprosjektet i LOG650. Planen dokumenterer baseline
+for omfang, fremdrift, risiko, kvalitet og ressursbruk i et
+studentprosjekt som analyserer historiske salgsdata for å utvikle en
+modell for månedlig etterspørselsprognose.</p>
+<p>Prosjektstyringsplanen er utarbeidet i tråd med prinsipper fra
+Project Management Institute (PMI, 2021) og PMBOK® Guide (7. utgave).
+Begreper som WBS, milepælsplan, risikovurdering og kommunikasjonsplan er
+anvendt i henhold til disse standardene, tilpasset prosjektets omfang og
+akademiske kontekst.</p>
+<p>Prosjektet bygger på proposalen fra fase 1 og brukes som
+styringsgrunnlag for fase 2, 3 og 4.</p>
+<p>Formålet med prosjektet er å analysere historiske salgsdata og
+sammenligne ulike prognosemetoder for å estimere fremtidig etterspørsel.
+Prosjektet skal bidra til å vise hvordan kvantitative metoder kan brukes
+i logistikk og beslutningsstøtte.</p>
+<p>Dokumentet er et levende styringsdokument og kan oppdateres dersom
+prosjektets omfang, fremdrift eller risiko endres.</p>
+<p>1.1 Bakgrunn for prosjektet</p>
+<p>Virksomheter som distribuerer varer har behov for gode prognoser for
+fremtidig etterspørsel. Etterspørselen kan variere over tid og kan
+inneholde både trend og sesongmønstre. Svake prognoser kan føre til feil
+lageroppbygging, unødvendig kapitalbinding eller risiko for
+mangelsituasjoner.</p>
+<p>Prosjektet analyserer derfor historiske salgsdata for å undersøke
+hvordan ulike prognosemetoder kan brukes til å estimere fremtidig
+etterspørsel og gi et bedre beslutningsgrunnlag.</p>
+<p>1.2 Oppdragsgiver</p>
+<p>Sponsor for prosjektet er emneansvarlig i LOG650. Sponsor har
+myndighet til å godkjenne proposal, prosjektplan og sluttleveranser i
+tråd med kursopplegget.</p>
+<p>1.3 Problemstilling</p>
+<p>Hvilken prognosemodell gir høyest prediksjonsnøyaktighet for
+månedlige leveranser av farmasøytiske varelinjer i et
+sentrallager–grossist-system, gitt et datasett på 48 måneder og 105
+produkter?</p>
+<p>1.4 Kunde</p>
+<p>Kunden i prosjektet er primært den virksomheten som datasettet
+representerer. Både datasett og bedrift er anonymisert. I praksis
+fungerer faglærer og sensorer i emnet som representanter for kunden ved
+å vurdere om analysen er faglig solid og relevant for logistiske
+beslutninger.</p>
+<p>2.0 Prosjektets formål</p>
+<ul>
+<li><p>kan formulere en tydelig og avgrenset logistikkrelatert
+problemstilling der KI inngår som en sentral del av
+løsningsopplegget</p></li>
+<li><p>kan gjennomføre systematiske litteratursøk og bruke relevant
+teori til å begrunne problemstilling, metodevalg og bruk av KI</p></li>
+<li><p>kan planlegge et forskningsprosjekt i faser med tydelige
+milepæler, leveranser og fremdriftsplan</p></li>
+<li><p>kan utarbeide prosjektplaner, inkludert kravspesifikasjon, WBS og
+enkel Gantt-plan</p></li>
+<li><p>kan anvende utvalgte KI-verktøy eller KI-støttede analyser på
+logistikkdata (for eksempel prediksjon, klassifisering, optimering,
+simulering eller språkmodeller)</p></li>
+<li><p>kan analysere og tolke resultater fra KI-baserte analyser i lys
+av logistikkfaglig teori og praksis</p></li>
+<li><p>kan skrive en strukturert vitenskapelig rapport med tydelig
+problemstilling, teori, metode, resultater og diskusjon kan presentere
+og begrunne valg av problemstilling, metode og funn muntlig for
+fagpersoner og medstudenter</p></li>
+</ul>
+<p>2.1 Forretningscase</p>
+<p>Prosjektet er begrunnet fordi mer presise etterspørselsprognoser kan
+gi bedre beslutningsgrunnlag for planlegging av lager, distribusjon og
+produksjon.</p>
+<p>I dette prosjektet analyseres et datasett bestående av anonymiserte
+varelinjer over en periode på 48 måneder. Analysen vil vise hvordan
+ulike prognosemetoder presterer på samme datasett.</p>
+<p>For studenten gir prosjektet praktisk erfaring med tidsserieanalyse,
+prognosemodeller og anvendelse av AI som støtteverktøy i
+analysearbeid.</p>
+<p>2.2 Forutsetninger</p>
+<p>Prosjektet bygger på følgende forutsetninger:</p>
+<ul>
+<li><p>Det finnes et anonymisert datasett med historiske
+salgsdata.</p></li>
+<li><p>Datasettet består av 105 varelinjer over en periode på 48
+måneder.</p></li>
+<li><p>Dataene representerer antall pakninger distribuert fra
+sentrallager til grossister.</p></li>
+<li><p>Historiske data er tilstrekkelige til å analysere trend og
+sesong.</p></li>
+<li><p>Analyse kan gjennomføres med tilgjengelige verktøy for statistisk
+analyse.</p></li>
+</ul>
+<p>2.3 Gevinster</p>
+<p>For caset kan analysen bidra til bedre forståelse av
+etterspørselsmønstre og gi et bedre grunnlag for planlegging av lager og
+distribusjon.</p>
+<p>For prosjektet gir arbeidet erfaring med kvantitative metoder,
+tidsserieanalyse og praktisk bruk av data i logistikkrelaterte
+problemstillinger.</p>
+<p>2.4 Kostnader</p>
+<p>Prosjektet har ikke et eget finansielt budsjett. Kostnaden består
+hovedsakelig av tidsbruk knyttet til analyse, modellering og
+rapportskriving.</p>
+<p>2.5 Analyse</p>
+<p>En kombinasjon av en naiv referansemodell, klassiske prognosemetoder
+(Holt-Winters og ARIMA) og en nyere maskinlæringsmodell (XGBoost) gir en
+god balanse mellom faglig kvalitet og gjennomførbarhet innenfor
+prosjektets tidsramme.</p>
+<p>Denne tilnærmingen gjør det mulig å sammenligne tradisjonelle
+statistiske modeller med nyere analysemetoder på samme datasett, og å
+vurdere om økt modellkompleksitet gir reell merverdi i en praktisk
+logistikkontekst.</p>
+<p>2.6 Omfang</p>
+<p>Prosjektet omfatter:</p>
+<ul>
+<li><p>Analyse av historiske salgsdata</p></li>
+<li><p>Datavask og strukturering av datasettet</p></li>
+<li><p>Visualisering av trend og sesong</p></li>
+<li><p>Implementering av prognosemodeller</p></li>
+<li><p>Evaluering av prognosenøyaktighet</p></li>
+<li><p>Tolkning av resultatene i en logistikkfaglig kontekst</p></li>
+<li><p>Utarbeidelse av rapport og presentasjon</p></li>
+</ul>
+<p>Prosjektet omfatter ikke implementering av løsningen i operative
+systemer eller analyse av eksterne markedsvariabler.</p>
+<p>2.7 Mål</p>
+<p>Prosjektets hovedmål er å utvikle og evaluere en kvantitativ
+prognosemodell som kan estimere fremtidig etterspørsel basert på
+historiske salgsdata.</p>
+<p>2.7.1 Suksesskriterier</p>
+<p>For å sikre at prosjektmålet er verifiserbart, er følgende målbare
+suksesskriterier definert:</p>
+<ul>
+<li><p>Median MAPE for testperioden (siste 12 måneder) er under 30 % for
+minst én av de implementerte modellene. <strong>Status: Ikke
+oppnådd.</strong> Beste resultat er XGBoost global med 52,19 %. Avviket
+skyldes høy variabilitet og lavvolum-dominans i datasettet. Kriteriet
+var satt før utforskende dataanalyse avdekket dette; se avsnitt 8.4 i
+rapporten.</p></li>
+<li><p>Den beste modellen oppnår lavere RMSE enn naiv sesongprognose for
+minst 50 % av de 105 SKU-ene. <strong>Status: Oppnådd.</strong> XGBoost
+global RMSE 811 mot naiv 1131 (median). Alle tre ikke-naive modeller
+slår naiv på median RMSE.</p></li>
+<li><p>Alle fire prognosemodeller (Naiv, Holt-Winters, ARIMA/SARIMA,
+XGBoost) er implementert og evaluert med samme evalueringsrammeverk.
+<strong>Status: Oppnådd.</strong></p></li>
+<li><p>Analysen er fullt reproduserbar: fast random seed (42), faste
+train/test-split (36/12 måneder) og all kode er versjonskontrollert i
+Git. <strong>Status: Oppnådd.</strong></p></li>
+<li><p>Rapporten er ferdigstilt og godkjent av peer review innen
+2026-04-29. <strong>Status: Oppnådd.</strong> Rapport ferdigstilt; peer
+review gjennomført innen fristen.</p></li>
+</ul>
+<p>Disse kriteriene er direkte knyttet til kravene REQ-001 til REQ-006
+og brukes som grunnlag for kvalitetsvurdering i seksjon 3.6.</p>
+<p>Krav</p>
+<table style="width:98%;">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 18%" />
+<col style="width: 20%" />
+<col style="width: 15%" />
+<col style="width: 18%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Krav</th>
+<th style="text-align: left;">Eier</th>
+<th style="text-align: left;">Leveranse</th>
+<th style="text-align: left;">Verifikasjon</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">REQ-001</td>
+<td style="text-align: left;">Funksjonelt</td>
+<td style="text-align: left;">Utarbeide prognose for fremtidig
+etterspørsel</td>
+<td style="text-align: left;">Prosjektleder</td>
+<td style="text-align: left;">Resultatkapittel</td>
+<td style="text-align: left;">Analyse</td>
+</tr>
+<tr>
+<td style="text-align: left;">REQ-002</td>
+<td style="text-align: left;">Funksjonelt</td>
+<td style="text-align: left;">Bruke historiske salgsdata som
+analysegrunnlag</td>
+<td style="text-align: left;">Prosjektleder</td>
+<td style="text-align: left;">Datagrunnlag</td>
+<td style="text-align: left;">Review</td>
+</tr>
+<tr>
+<td style="text-align: left;">REQ-003</td>
+<td style="text-align: left;">Funksjonelt</td>
+<td style="text-align: left;">Implementere minst én klassisk
+prognosemodell</td>
+<td style="text-align: left;">Prosjektleder</td>
+<td style="text-align: left;">Metodekapittel</td>
+<td style="text-align: left;">Review</td>
+</tr>
+<tr>
+<td style="text-align: left;">REQ-004</td>
+<td style="text-align: left;">Funksjonelt</td>
+<td style="text-align: left;">Sammenligne flere prognosemetoder</td>
+<td style="text-align: left;">Prosjektleder</td>
+<td style="text-align: left;">Analysekapittel</td>
+<td style="text-align: left;">Analyse</td>
+</tr>
+<tr>
+<td style="text-align: left;">REQ-005</td>
+<td style="text-align: left;">Funksjonelt</td>
+<td style="text-align: left;">Tolke resultatene i en logistikkfaglig
+kontekst</td>
+<td style="text-align: left;">Prosjektleder</td>
+<td style="text-align: left;">Diskusjon</td>
+<td style="text-align: left;">Review</td>
+</tr>
+<tr>
+<td style="text-align: left;">REQ-006</td>
+<td style="text-align: left;">Ikke-funksjonelt</td>
+<td style="text-align: left;">Dokumentere metode og analyse slik at
+arbeidet kan etterprøves</td>
+<td style="text-align: left;">Prosjektleder</td>
+<td style="text-align: left;">Rapport</td>
+<td style="text-align: left;">Review</td>
+</tr>
+</tbody>
+</table>
+<p>Løsning</p>
+<p>Løsningen består av en analysepipeline der historiske salgsdata
+struktureres og analyseres ved hjelp av fire prognosemodeller
+implementert i Python:</p>
+<blockquote>
+<p>Naiv sesongprognose (referansemodell)<br />
+Holt-Winters eksponentiell glatting<br />
+ARIMA / SARIMA<br />
+XGBoost (global maskinlæringsmodell)</p>
+</blockquote>
+<p>Modellene evalueres med feilmålene RMSE, MAE og MAPE (median over
+alle 105 SKU-er). Resultatene presenteres i en vitenskapelig rapport med
+analyse og diskusjon av praktiske implikasjoner for
+logistikkplanlegging.</p>
+<p>2.8 Arbeidsnedbrytningsstruktur</p>
+<p><strong>Fase 1</strong></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" checked="" />1.
+Initiering</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />1.1 Definere
+prosjektidé</label></li>
+<li><label><input type="checkbox" checked="" />1.2 Avklare
+problemstilling</label></li>
+<li><label><input type="checkbox" checked="" />1.3 Identifisere
+datagrunnlag</label></li>
+<li><label><input type="checkbox" checked="" />1.4 Gjennomføre
+innledende litteratursøk</label></li>
+<li><label><input type="checkbox" checked="" />1.5 Avklare metodisk
+tilnærming</label></li>
+<li><label><input type="checkbox" checked="" />1.6 Utarbeide
+proposal</label></li>
+<li><label><input type="checkbox" checked="" />1.7 Innlevering av
+proposal</label></li>
+</ul></li>
+</ul>
+<p><strong>Fase 2</strong></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" checked="" />2.
+Planlegging</label></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" checked="" />2.1 Etablere
+prosjektplan</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />2.1.1 Definere
+prosjektomfang</label></li>
+<li><label><input type="checkbox" checked="" />2.1.2 Definere
+prosjektmål</label></li>
+<li><label><input type="checkbox" checked="" />2.1.3 Avklare
+avgrensninger</label></li>
+</ul></li>
+<li><p><label><input type="checkbox" checked="" />2.2 Planlegge
+analysearbeid</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />2.2.1 Strukturere
+datagrunnlag</label></li>
+<li><label><input type="checkbox" checked="" />2.2.2 Velge
+prognosemetoder</label></li>
+<li><label><input type="checkbox" checked="" />2.2.3 Definere
+evalueringsmetoder</label></li>
+</ul></li>
+<li><p><label><input type="checkbox" checked="" />2.3 Planlegge
+fremdrift</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />2.3.1 Lage
+arbeidsnedbrytningsstruktur</label></li>
+<li><label><input type="checkbox" checked="" />2.3.2 Lage
+Gantt-plan</label></li>
+<li><label><input type="checkbox" checked="" />2.3.3 Definere
+milepæler</label></li>
+</ul></li>
+<li><p><label><input type="checkbox" checked="" />2.4 Godkjenning av
+prosjektplan</label></p></li>
+</ul></li>
+</ul>
+<p><strong>Fase 3</strong></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" checked="" />3.
+Gjennomføring</label></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" checked="" />3.1
+Databehandling</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />3.1.1 Importere
+datasett</label></li>
+<li><label><input type="checkbox" checked="" />3.1.2 Rense og
+strukturere data</label></li>
+<li><label><input type="checkbox" checked="" />3.1.3 Kontrollere
+datakvalitet</label></li>
+</ul></li>
+<li><p><label><input type="checkbox" checked="" />3.2 Utforskende
+analyse</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />3.2.1 Visualisere
+salgsutvikling</label></li>
+<li><label><input type="checkbox" checked="" />3.2.2 Analysere
+trend</label></li>
+<li><label><input type="checkbox" checked="" />3.2.3 Analysere
+sesongvariasjoner</label></li>
+</ul></li>
+<li><p><label><input type="checkbox" checked="" />3.3
+Prognosemodeller</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />3.3.1 Implementere
+Holt-Winters modell</label></li>
+<li><label><input type="checkbox" checked="" />3.3.2 Implementere ARIMA
+modell</label></li>
+<li><label><input type="checkbox" checked="" />3.3.3 Implementere
+XGBoost modell</label></li>
+</ul></li>
+<li><p><label><input type="checkbox" checked="" />3.4
+Modellanalyse</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />3.4.1 Beregne
+prognosefeil</label></li>
+<li><label><input type="checkbox" checked="" />3.4.2 Sammenligne
+modellresultater</label></li>
+<li><label><input type="checkbox" checked="" />3.4.3 Tolke
+resultatene</label></li>
+</ul></li>
+<li><p><label><input type="checkbox" checked="" />3.5
+Rapportarbeid</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="" />3.5.1 Skrive
+metodekapittel</label></li>
+<li><label><input type="checkbox" checked="" />3.5.2 Skrive
+resultatkapittel</label></li>
+<li><label><input type="checkbox" checked="" />3.5.3 Skrive
+diskusjon</label></li>
+</ul></li>
+</ul></li>
+</ul>
+<p><strong>Fase 4</strong></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" />4. Avslutning</label></p>
+<ul class="task-list">
+<li><label><input type="checkbox" />4.1 Revidere rapport etter
+tilbakemeldinger</label></li>
+<li><label><input type="checkbox" />4.2 Ferdigstille analyse og
+figurer</label></li>
+<li><label><input type="checkbox" />4.3 Kvalitetssikre referanser og
+metode</label></li>
+<li><label><input type="checkbox" />4.4 Ferdigstille
+sluttrapport</label></li>
+<li><label><input type="checkbox" />4.5 Utarbeide
+presentasjon</label></li>
+<li><label><input type="checkbox" />4.6 Endelig innlevering</label></li>
+</ul></li>
+</ul>
+<p>3.0 Fremdrift</p>
+<p>Fremdriftsplanen følger kursets struktur:</p>
+<p>Fase 1: januar 2026<br />
+Fase 2: februar 2026<br />
+Fase 3: mars–april 2026<br />
+Fase 4: avslutning i mai 2026</p>
+<p>3.1 Milepæler</p>
+<table style="width:97%;">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 41%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Milepæl</th>
+<th style="text-align: left;">Beskrivelse</th>
+<th style="text-align: left;">Dato</th>
+<th style="text-align: left;">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Problemstilling og case avklart</td>
+<td style="text-align: left;">Endelig problemstilling definert og
+datagrunnlag identifisert</td>
+<td style="text-align: left;">2026-01-12</td>
+<td style="text-align: left;">Oppnådd</td>
+</tr>
+<tr>
+<td style="text-align: left;">Proposal godkjent</td>
+<td style="text-align: left;">Proposal levert og godkjent i fase 1</td>
+<td style="text-align: left;">2026-01-21</td>
+<td style="text-align: left;">Oppnådd</td>
+</tr>
+<tr>
+<td style="text-align: left;">Prosjektplan ferdigstilt</td>
+<td style="text-align: left;">Prosjektstyringsplan ferdig og etablert
+som planbaseline</td>
+<td style="text-align: left;">2026-03-09</td>
+<td style="text-align: left;">Oppnådd</td>
+</tr>
+<tr>
+<td style="text-align: left;">Datagrunnlag klargjort</td>
+<td style="text-align: left;">Datasett renset og strukturert for
+analyse</td>
+<td style="text-align: left;">2026-03-11</td>
+<td style="text-align: left;">Oppnådd</td>
+</tr>
+<tr>
+<td style="text-align: left;">Første analyse gjennomført</td>
+<td style="text-align: left;">Første runde med modellering og foreløpige
+resultater</td>
+<td style="text-align: left;">2026-03-25</td>
+<td style="text-align: left;">Oppnådd</td>
+</tr>
+<tr>
+<td style="text-align: left;">Prognosemodell ferdigstilt</td>
+<td style="text-align: left;">Valgt modell implementert og validert</td>
+<td style="text-align: left;">2026-04-10</td>
+<td style="text-align: left;">Oppnådd</td>
+</tr>
+<tr>
+<td style="text-align: left;">Rapportutkast ferdig</td>
+<td style="text-align: left;">Første fullstendige utkast av rapport</td>
+<td style="text-align: left;">2026-04-27</td>
+<td style="text-align: left;">Oppnådd</td>
+</tr>
+<tr>
+<td style="text-align: left;">Peer review gjennomført</td>
+<td style="text-align: left;">Fagfellevurdering mottatt og vurdert</td>
+<td style="text-align: left;">2026-04-29</td>
+<td style="text-align: left;">Oppnådd</td>
+</tr>
+<tr>
+<td style="text-align: left;">Endelig rapport ferdigstilt</td>
+<td style="text-align: left;">Endelig versjon av rapport ferdig etter
+revisjon</td>
+<td style="text-align: left;">2026-05-31</td>
+<td style="text-align: left;">Planlagt</td>
+</tr>
+</tbody>
+</table>
+<p>3.1.1 Gantt-plan</p>
+<table style="width:82%;">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Aktivitet</th>
+<th style="text-align: left;">Jan</th>
+<th style="text-align: left;">Feb</th>
+<th style="text-align: left;">Mar</th>
+<th style="text-align: left;">Apr</th>
+<th style="text-align: left;">Mai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>FASE 1 — Initiering</strong>
+Definere problemstilling Litteratursøk Utarbeide og levere proposal</td>
+<td style="text-align: left;">████ ████ ████</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FASE 2 — Planlegging</strong>
+Etablere prosjektplan Velge prognosemetoder Definere evalueringsmetoder
+Lage WBS og Gantt-plan</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">████ ████ ████ ████</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FASE 3 — Gjennomføring</strong>
+Datavask og strukturering Utforskende dataanalyse (EDA) Implementere
+modeller Kjøre analyser og evaluere Skrive metode- og resultatkap Skrive
+diskusjon og konklusjo</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">█ █ █</td>
+<td style="text-align: left;">███ ███ ███ ██ ██ ██ ██</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FASE 4 — Avslutning</strong>
+Revisjon etter peer review Kvalitetssikre rapport og fig Ferdigstille og
+levere rappor Utarbeide presentasjon</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">███ ███ ███ ███</td>
+<td style="text-align: left;">█ █ █ █</td>
+</tr>
+</tbody>
+</table>
+<p>3.2 Risiko</p>
+<p>De viktigste risikoene i prosjektet er identifisert og kvantitativt
+vurdert nedenfor. Sannsynlighet (P) er angitt på skala 0,0–1,0 og
+konsekvens (K) på skala 1–5. Risikoprioritetsindeks (RPN = P × K)
+benyttes for å rangere og prioritere risikohåndtering, i tråd med
+anerkjente prosjektledelsesprinsipper (PMI, 2021).</p>
+<table style="width:98%;">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 31%" />
+<col style="width: 7%" />
+<col style="width: 5%" />
+<col style="width: 6%" />
+<col style="width: 12%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">Risiko</th>
+<th style="text-align: left;">P</th>
+<th style="text-align: left;">K</th>
+<th style="text-align: left;">RPN</th>
+<th style="text-align: left;">Prioritet</th>
+<th style="text-align: left;">Tiltak</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">R-01</td>
+<td style="text-align: left;">Utilstrekkelig datakvalitet (manglende
+verdier, feil i registreringer)</td>
+<td style="text-align: left;">0,20</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">1,00</td>
+<td style="text-align: left;">Høy</td>
+<td style="text-align: left;">Systematisk datavask gjøres tidlig i fase
+3; nullverdier håndteres eksplisitt i koden</td>
+</tr>
+<tr>
+<td style="text-align: left;">R-03</td>
+<td style="text-align: left;">Tidsmangel mot innleverings- fristen</td>
+<td style="text-align: left;">0,35</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">1,40</td>
+<td style="text-align: left;">Høy</td>
+<td style="text-align: left;">Milepælsplan med buffer; rapport
+prioriteres over ytterligere modell- eksperimenter</td>
+</tr>
+<tr>
+<td style="text-align: left;">R-05</td>
+<td style="text-align: left;">Datatap eller korrupsjon av
+prosjektfiler</td>
+<td style="text-align: left;">0,10</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">0,50</td>
+<td style="text-align: left;">Middels</td>
+<td style="text-align: left;">Versjonskontroll med Git; sikkerhetskopi
+på OneDrive og ekstern disk</td>
+</tr>
+<tr>
+<td style="text-align: left;">R-06</td>
+<td style="text-align: left;">Konfidensialitetsbrudd knyttet til
+bedriftsdata</td>
+<td style="text-align: left;">0,10</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">0,50</td>
+<td style="text-align: left;">Middels</td>
+<td style="text-align: left;">Datasettet er anonymisert før analyse og
+bruk i KI-verktøy; kun aggregerte resultater presenteres</td>
+</tr>
+<tr>
+<td style="text-align: left;">R-02</td>
+<td style="text-align: left;">Modellene gir ikke tilfreds- stillende
+prognosenøyaktighet</td>
+<td style="text-align: left;">0,30</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">0,90</td>
+<td style="text-align: left;">Middels</td>
+<td style="text-align: left;">Naiv sesongprognose sikrer et minimumsnivå
+for sammenligning; resultater tolkes i lys av datakvalitet</td>
+</tr>
+<tr>
+<td style="text-align: left;">R-04</td>
+<td style="text-align: left;">Tekniske problemer med
+Python-biblioteker</td>
+<td style="text-align: left;">0,15</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">0,45</td>
+<td style="text-align: left;">Lav</td>
+<td style="text-align: left;">Alle biblioteker (pmdarima, xgboost,
+statsmodels) testes tidlig; fallback til enklere modell ved feil</td>
+</tr>
+</tbody>
+</table>
+<p><em>Risikomatrisen er sortert etter RPN (høyest til lavest). Risikoer
+med RPN ≥ 1,0 følges opp ved hvert milepælspunkt.</em></p>
+<p>3.3 Ressurser</p>
+<p>Prosjektet gjennomføres som et individuelt prosjekt av Morten
+Eidsvåg. Ressursene er begrenset til studentens egen innsats, fritt
+tilgjengelige programvareverktøy og datautstyr som er tilgjengelig for
+studenten.</p>
+<p>Ressursoversikt:</p>
+<ul>
+<li><p><strong>Menneskelige ressurser:</strong> Studenten (Morten
+Eidsvåg) som prosjektleder, analytiker og rapportforfatter. Veileder
+(Bård Inge Austigard Pedersen) bidrar med faglig veiledning ved
+behov.</p></li>
+<li><p><strong>Programvareverktøy:</strong> Python med bibliotekene
+pandas, numpy, statsmodels, pmdarima, xgboost, matplotlib og
+scikit-learn. Alle verktøy er gratis og åpen kildekode. Visual Studio
+Code benyttes som utviklingsmiljø. Git og GitHub benyttes til
+versjonskontroll.</p></li>
+<li><p><strong>Data:</strong> Anonymisert datasett hentet fra
+virksomhetens ERP-system. Datasettet er allerede tilgjengelig og
+klargjort for analyse.</p></li>
+<li><p><strong>Utstyr:</strong> Studentens egen PC med tilstrekkelig
+kapasitet for Python-analyse og rapportskriving.</p></li>
+<li><p><strong>Estimert tidsbruk:</strong> Ca. 200 timer totalt fordelt
+over prosjektets fire faser (inklusive litteratursøk, analyse,
+modellering og rapportskriving).</p></li>
+</ul>
+<p>3.4 Kritiske ressurser</p>
+<p>Følgende ressurser er kritiske for prosjektets gjennomføring, og
+bortfall eller begrensninger i disse vil kunne forsinke eller svekke
+leveransene:</p>
+<ul>
+<li><p><strong>Tilgang til datasettet:</strong> Datasettet er grunnlaget
+for hele analysen. Tap, korrupsjon eller uforutsette
+konfidensialitetshensyn vil stoppe prosjektet. Risiko reduseres gjennom
+Git-versjonskontroll og OneDrive-backup.</p></li>
+<li><p><strong>Studentens tid:</strong> Prosjektet er avhengig av at
+studenten prioriterer tilstrekkelig tid til analyse og rapportskriving
+innenfor den gitte tidsrammen, parallelt med andre studiefag og
+arbeid.</p></li>
+<li><p><strong>Analyseverktøy:</strong> Python og relevante biblioteker
+må fungere som forventet. Kritiske biblioteker testes tidlig i fase 3
+for å avdekke eventuelle installasjons- eller
+kompatibilitetsproblemer.</p></li>
+<li><p><strong>Veiledning:</strong> Tilgang til faglig veiledning fra
+Bård Inge Austigard Pedersen er viktig for å sikre faglig kvalitet i
+rapport og metode. Veiledning avklares i god tid før milepæler.</p></li>
+</ul>
+<p>3.5 Kommunikasjon</p>
+<p>Kommunikasjonen i prosjektet er strukturert rundt tre relasjoner:
+student og veileder, student og kontaktperson i virksomheten, og student
+og emneansvarlig / kursledelse.</p>
+<p><strong>Student og veileder (Bård Inge Austigard
+Pedersen):</strong><br />
+Veiledning skjer ved behov, minimum én gang per prosjektfase. Studenten
+tar initiativ til veiledning og forbereder spørsmål og materiale i
+forkant av hvert møte. Kommunikasjonskanal: e-post og fysisk/digitalt
+møte.</p>
+<p><strong>Student og kontaktperson i virksomheten (Erik
+Langlo):</strong><br />
+Kontakt ved behov, primært knyttet til avklaring av datasett,
+anonymisering og forståelse av forretningskontekst. Kommunikasjonskanal:
+e-post. Frekvens: ved behov, ikke fast møteplan.</p>
+<p><strong>Student og kursledelse / emneansvarlig:</strong><br />
+Kommunikasjon skjer via kursets læringsplattform (Blackboard/Canvas) og
+i forbindelse med innleveringer. Frister og krav følges i henhold til
+kursets plan.</p>
+<p><strong>Intern dokumentasjon:</strong><br />
+All analyse, kode og rapport dokumenteres løpende i prosjektets
+Git-repository. Prosjektstyringsplanen oppdateres ved vesentlige
+endringer i omfang, fremdrift eller risiko.</p>
+<p><strong>Peer review:</strong><br />
+Fagfellevurdering gjennomføres som del av kursets opplegg i siste uke av
+april (innen 2026-04-29). Tilbakemeldingene vurderes og relevante
+justeringer gjøres i rapporten før endelig innlevering.</p>
+<p>3.5.1 RACI-matrise</p>
+<p>Ansvarsfordelingen i prosjektet er strukturert ved hjelp av en
+RACI-matrise (R = Responsible, A = Accountable, C = Consulted, I =
+Informed), i tråd med PMI (2021).</p>
+<table style="width:98%;">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 15%" />
+<col style="width: 17%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Aktivitet</th>
+<th style="text-align: left;">Student (ME)</th>
+<th style="text-align: left;">Veileder (BAP)</th>
+<th style="text-align: left;">Kontaktperson</th>
+<th style="text-align: left;">Kursledelse</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Datainnsamling og -vask</td>
+<td style="text-align: left;">R / A</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">I</td>
+</tr>
+<tr>
+<td style="text-align: left;">Utforskende analyse (EDA)</td>
+<td style="text-align: left;">R / A</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">I</td>
+</tr>
+<tr>
+<td style="text-align: left;">Implementere modeller</td>
+<td style="text-align: left;">R / A</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">I</td>
+</tr>
+<tr>
+<td style="text-align: left;">Evaluere og tolke resultater</td>
+<td style="text-align: left;">R / A</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">I</td>
+</tr>
+<tr>
+<td style="text-align: left;">Skrive rapport</td>
+<td style="text-align: left;">R / A</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">I</td>
+<td style="text-align: left;">I</td>
+</tr>
+<tr>
+<td style="text-align: left;">Peer review</td>
+<td style="text-align: left;">R / A</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">I</td>
+</tr>
+<tr>
+<td style="text-align: left;">Innlevering av rapport</td>
+<td style="text-align: left;">R / A</td>
+<td style="text-align: left;">I</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">A</td>
+</tr>
+<tr>
+<td style="text-align: left;">Oppdatere prosjektplan</td>
+<td style="text-align: left;">R / A</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">I</td>
+</tr>
+</tbody>
+</table>
+<p><em>ME = Morten Eidsvåg, BAP = Bård Inge Austigard Pedersen</em></p>
+<p>3.6 Kvalitet</p>
+<p>Kvalitet i prosjektet sikres gjennom følgende tiltak:</p>
+<p><strong>Metodisk dokumentasjon:</strong><br />
+All analyse, alle modellvalg og alle parametere dokumenteres i rapporten
+slik at arbeidet kan etterprøves av andre. Python-koden er strukturert,
+kommentert og lagret i versjonskontroll.</p>
+<p><strong>Reproduserbarhet:</strong><br />
+Analysen er implementert i Python med fast random seed (42) og faste
+train/test-split (36/12 måneder). Samme evalueringsrammeverk benyttes
+for alle modeller for å sikre sammenlignbarhet.</p>
+<p><strong>Intern gjennomgang:</strong><br />
+Studenten gjennomgår alle analyseresultater og rapporttekst kritisk
+mellom hvert delsteg. Tall i rapporten kontrolleres mot kodeutskrifter
+og CSV-filer.</p>
+<p><strong>Peer review:</strong><br />
+Rapport sendes til fagfellevurdering som del av kursets opplegg.
+Tilbakemeldinger vurderes systematisk og det tas stilling til alle
+kommentarer før endelig innlevering.</p>
+<p><strong>Kildebruk:</strong><br />
+Alle referanser følger APA 7. utgave (norsk versjon). Referanselisten
+kontrolleres mot tekst og sitatbruk gjennomgås for nøyaktighet.</p>
+<p><strong>Kriterier for godkjent kvalitet:</strong><br />
+Rapporten anses ferdig når alle krav i REQ-001 til REQ-006 er oppfylt,
+analysen er reproduserbar og rapporten er gjennomgått av peer
+review.</p>
+<p>3.7 Anskaffelser</p>
+<p>Prosjektet krever ingen eksterne anskaffelser. Alle
+programvareverktøy som benyttes er fritt tilgjengelige og åpen kildekode
+(Python, pandas, statsmodels, pmdarima, xgboost, matplotlib,
+scikit-learn, Visual Studio Code, Git). Datasettet er hentet internt fra
+virksomheten av studenten selv og er ikke kjøpt eller lisensiert fra
+tredjepart. Det påløper ingen kostnader knyttet til anskaffelser i dette
+prosjektet.</p>
+<p>3.8 Dataforvaltningsplan</p>
+<p>Dataforvaltningsplanen beskriver hvordan data håndteres gjennom
+prosjektets livssyklus, i tråd med krav til reproduserbarhet og
+konfidensialitet i akademisk forskning.</p>
+<p><strong>Datakilde og opprinnelse:</strong><br />
+Datasettet er hentet fra virksomhetens ERP-system og består av
+anonymiserte salgsdata for 105 SKU-er over en periode på 48 måneder
+(januar 2022 – desember 2025). Anonymiseringen er gjennomført av
+kontaktperson Erik Langlo før utlevering til studenten.</p>
+<p><strong>Dataformat og versjonering:</strong><br />
+Rådata lagres i CSV-format og er versjonskontrollert i prosjektets
+Git-repository. Bearbeidede data (renset datasett, aggregerte
+resultater) lagres som separate filer og dokumenteres med beskrivende
+filnavn og endringslogg i Git.</p>
+<p><strong>Tilgangsbegrensning og konfidensialitet:</strong><br />
+Datasettet lagres kun lokalt på studentens PC og i OneDrive (privat,
+ikke delt). Rådata publiseres ikke i offentlige Git-repositories eller
+deles med tredjeparter. Kun aggregerte og anonymiserte resultater
+presenteres i rapporten og eventuelle vedlegg.</p>
+<p><strong>Bruk av KI-verktøy:</strong><br />
+Anonymiserte data kan benyttes som kontekst i KI-støttede analyseverktøy
+der dette er nødvendig for analysearbeidet. Ingen identifiserbare
+bedriftsdata eller personopplysninger inngår i slike forespørsler.</p>
+<p><strong>Arkivering og sletting:</strong><br />
+Etter prosjektets avslutning (2026-05-31) arkiveres prosjektets
+Git-repository. Rådata slettes fra skytjenester innen 2026-08-31 dersom
+virksomheten ikke har gitt eksplisitt samtykke til videre lagring.</p>
+<p><strong>Integritet og validering:</strong><br />
+Datasettets integritet verifiseres ved import ved kontroll av antall
+rader, kolonner og verdier mot forventede parametre (105 SKU-er, 48
+måneder). Kontrollresultater loggføres i kode.</p>
+<p>Endringskontrollprosess</p>
+<p>Eventuelle endringer i problemstilling, metode eller fremdriftsplan
+dokumenteres og vurderes opp mot prosjektets mål og tidsramme.
+Vesentlige endringer avklares med faglærer og registreres i dokumentets
+versjonslogg (se side 1).</p>
+<p>Referanser</p>
+<p>Project Management Institute. (2021). <em>A guide to the project
+management body of knowledge (PMBOK® Guide)</em> (7. utg.). Project
+Management Institute.</p>
+  </div>
+</body>
+</html>

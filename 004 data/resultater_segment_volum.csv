@@ -1,0 +1,13 @@
+Segment,Modell,Median_MAPE,N_SKU
+Høyt volum,Naiv,58.85,35
+Høyt volum,Holt-Winters,61.01,35
+Høyt volum,ARIMA,54.91,35
+Høyt volum,XGBoost,49.46,35
+Middels volum,Naiv,67.5,35
+Middels volum,Holt-Winters,63.63,35
+Middels volum,ARIMA,57.77,35
+Middels volum,XGBoost,53.32,35
+Lavt volum,Naiv,86.07,35
+Lavt volum,Holt-Winters,62.49,35
+Lavt volum,ARIMA,61.48,35
+Lavt volum,XGBoost,66.61,35

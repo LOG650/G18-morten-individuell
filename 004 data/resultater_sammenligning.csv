@@ -1,0 +1,6 @@
+Modell,RMSE (median),MAE (median),"MAPE (median, %)",MAPE (SKU-er brukt)
+Naiv,1131.65,914.58,67.5,105
+Holt-Winters,935.84,769.9,62.49,105
+ARIMA,846.2,820.01,57.77,105
+XGBoost,811.24,702.95,52.19,105
+XGBoost (individuell),949.67,845.8,62.61,105

@@ -1,0 +1,695 @@
+# Prosjektstyringsplan [Versjon 3.1]{.mark}
+
+**Analyserer av historiske salgsdata for å utvikle en modell for
+månedlig etterspørselsprognose.**
+
+Emne: LOG650 -- Forskningsprosjekt: Logistikk og kunstig intelligens
+
+Dato: 16.04.2026
+
+Utarbeidet av: Morten Eidsvåg
+
+Institusjon: Høgskolen i Molde
+
+Veileder: Bård Inge Austigard Pedersen
+
+Kontaktperson: Erik Langlo
+
+Bedrift: Importør av legemidler
+
+**Versjonslogg**
+
+  -----------------------------------------------------------------------
+  Versjon   Dato         Endring                          Godkjent av
+  --------- ------------ -------------------------------- ---------------
+  1.0       2026-02-01   Første utkast                   —
+
+  2.0       2026-03-09   Revidert etter veiledning;       BAP
+                         omfang, risiko og milepæler
+                         oppdatert
+
+  2.1       2026-04-08   Kvantitativ risikovurdering,     —
+                         målbare suksesskriterier,
+                         RACI-matrise og
+                         dataforvaltningsplan lagt til
+
+  3.0       2026-04-16   WBS oppdatert med               —
+                         avkryssingsbokser; milepæl-
+                         status oppdatert; suksess-
+                         kriterium-avvik dokumentert
+
+  3.1       2026-05-09   Milepælsstatus oppdatert med    —
+                         faktiske utfall; suksess-
+                         kriteriene merket med status;
+                         1.3 Kunde rettet til 1.4
+  -----------------------------------------------------------------------
+
+1 Sammendrag
+
+Dette dokumentet utgjør prosjektstyringsplanen for
+etterspørselsprognoseprosjektet i LOG650. Planen dokumenterer baseline
+for omfang, fremdrift, risiko, kvalitet og ressursbruk i et
+studentprosjekt som analyserer historiske salgsdata for å utvikle en
+modell for månedlig etterspørselsprognose.
+
+Prosjektstyringsplanen er utarbeidet i tråd med prinsipper fra
+Project Management Institute (PMI, 2021) og PMBOK® Guide (7. utgave).
+Begreper som WBS, milepælsplan, risikovurdering og kommunikasjonsplan
+er anvendt i henhold til disse standardene, tilpasset prosjektets
+omfang og akademiske kontekst.
+
+Prosjektet bygger på proposalen fra fase 1 og brukes som
+styringsgrunnlag for fase 2, 3 og 4.
+
+Formålet med prosjektet er å analysere historiske salgsdata og
+sammenligne ulike prognosemetoder for å estimere fremtidig etterspørsel.
+Prosjektet skal bidra til å vise hvordan kvantitative metoder kan brukes
+i logistikk og beslutningsstøtte.
+
+Dokumentet er et levende styringsdokument og kan oppdateres dersom
+prosjektets omfang, fremdrift eller risiko endres.
+
+1.1 Bakgrunn for prosjektet
+
+Virksomheter som distribuerer varer har behov for gode prognoser for
+fremtidig etterspørsel. Etterspørselen kan variere over tid og kan
+inneholde både trend og sesongmønstre. Svake prognoser kan føre til feil
+lageroppbygging, unødvendig kapitalbinding eller risiko for
+mangelsituasjoner.
+
+Prosjektet analyserer derfor historiske salgsdata for å undersøke
+hvordan ulike prognosemetoder kan brukes til å estimere fremtidig
+etterspørsel og gi et bedre beslutningsgrunnlag.
+
+1.2 Oppdragsgiver
+
+Sponsor for prosjektet er emneansvarlig i LOG650. Sponsor har myndighet
+til å godkjenne proposal, prosjektplan og sluttleveranser i tråd med
+kursopplegget.
+
+1.3 Problemstilling
+
+Hvilken prognosemodell gir høyest prediksjonsnøyaktighet for månedlige
+leveranser av farmasøytiske varelinjer i et
+sentrallager--grossist-system, gitt et datasett på 48 måneder og 105
+produkter?
+
+1.4 Kunde
+
+Kunden i prosjektet er primært den virksomheten som datasettet
+representerer. Både datasett og bedrift er anonymisert. I praksis
+fungerer faglærer og sensorer i emnet som representanter for kunden ved
+å vurdere om analysen er faglig solid og relevant for logistiske
+beslutninger.
+
+2.0 Prosjektets formål
+
+-   kan formulere en tydelig og avgrenset logistikkrelatert
+    problemstilling der KI inngår som en sentral del av
+    løsningsopplegget
+
+-   kan gjennomføre systematiske litteratursøk og bruke relevant teori
+    til å begrunne problemstilling, metodevalg og bruk av KI
+
+-   kan planlegge et forskningsprosjekt i faser med tydelige milepæler,
+    leveranser og fremdriftsplan
+
+-   kan utarbeide prosjektplaner, inkludert kravspesifikasjon, WBS og
+    enkel Gantt-plan
+
+-   kan anvende utvalgte KI-verktøy eller KI-støttede analyser på
+    logistikkdata (for eksempel prediksjon, klassifisering, optimering,
+    simulering eller språkmodeller)
+
+-   kan analysere og tolke resultater fra KI-baserte analyser i lys av
+    logistikkfaglig teori og praksis
+
+-   kan skrive en strukturert vitenskapelig rapport med tydelig
+    problemstilling, teori, metode, resultater og diskusjon kan
+    presentere og begrunne valg av problemstilling, metode og funn
+    muntlig for fagpersoner og medstudenter
+
+2.1 Forretningscase
+
+Prosjektet er begrunnet fordi mer presise etterspørselsprognoser kan gi
+bedre beslutningsgrunnlag for planlegging av lager, distribusjon og
+produksjon.
+
+I dette prosjektet analyseres et datasett bestående av anonymiserte
+varelinjer over en periode på 48 måneder. Analysen vil vise hvordan
+ulike prognosemetoder presterer på samme datasett.
+
+For studenten gir prosjektet praktisk erfaring med tidsserieanalyse,
+prognosemodeller og anvendelse av AI som støtteverktøy i analysearbeid.
+
+2.2 Forutsetninger
+
+Prosjektet bygger på følgende forutsetninger:
+
+-   Det finnes et anonymisert datasett med historiske salgsdata.
+
+-   Datasettet består av 105 varelinjer over en periode på 48 måneder.
+
+-   Dataene representerer antall pakninger distribuert fra sentrallager
+    til grossister.
+
+-   Historiske data er tilstrekkelige til å analysere trend og sesong.
+
+-   Analyse kan gjennomføres med tilgjengelige verktøy for statistisk
+    analyse.
+
+2.3 Gevinster
+
+For caset kan analysen bidra til bedre forståelse av
+etterspørselsmønstre og gi et bedre grunnlag for planlegging av lager og
+distribusjon.
+
+For prosjektet gir arbeidet erfaring med kvantitative metoder,
+tidsserieanalyse og praktisk bruk av data i logistikkrelaterte
+problemstillinger.
+
+2.4 Kostnader
+
+Prosjektet har ikke et eget finansielt budsjett. Kostnaden består
+hovedsakelig av tidsbruk knyttet til analyse, modellering og
+rapportskriving.
+
+2.5 Analyse
+
+En kombinasjon av en naiv referansemodell, klassiske prognosemetoder
+(Holt-Winters og ARIMA) og en nyere maskinlæringsmodell (XGBoost) gir
+en god balanse mellom faglig kvalitet og gjennomførbarhet innenfor
+prosjektets tidsramme.
+
+Denne tilnærmingen gjør det mulig å sammenligne tradisjonelle
+statistiske modeller med nyere analysemetoder på samme datasett, og å
+vurdere om økt modellkompleksitet gir reell merverdi i en praktisk
+logistikkontekst.
+
+2.6 Omfang
+
+Prosjektet omfatter:
+
+-   Analyse av historiske salgsdata
+
+-   Datavask og strukturering av datasettet
+
+-   Visualisering av trend og sesong
+
+-   Implementering av prognosemodeller
+
+-   Evaluering av prognosenøyaktighet
+
+-   Tolkning av resultatene i en logistikkfaglig kontekst
+
+-   Utarbeidelse av rapport og presentasjon
+
+Prosjektet omfatter ikke implementering av løsningen i operative
+systemer eller analyse av eksterne markedsvariabler.
+
+2.7 Mål
+
+Prosjektets hovedmål er å utvikle og evaluere en kvantitativ
+prognosemodell som kan estimere fremtidig etterspørsel basert på
+historiske salgsdata.
+
+2.7.1 Suksesskriterier
+
+For å sikre at prosjektmålet er verifiserbart, er følgende målbare
+suksesskriterier definert:
+
+-   Median MAPE for testperioden (siste 12 måneder) er under 30 % for
+    minst én av de implementerte modellene.
+    **Status: Ikke oppnådd.** Beste resultat er XGBoost global med
+    52,19 %. Avviket skyldes høy variabilitet og lavvolum-dominans i
+    datasettet. Kriteriet var satt før utforskende dataanalyse avdekket
+    dette; se avsnitt 8.4 i rapporten.
+
+-   Den beste modellen oppnår lavere RMSE enn naiv sesongprognose for
+    minst 50 % av de 105 SKU-ene.
+    **Status: Oppnådd.** XGBoost global RMSE 811 mot naiv 1131 (median).
+    Alle tre ikke-naive modeller slår naiv på median RMSE.
+
+-   Alle fire prognosemodeller (Naiv, Holt-Winters, ARIMA/SARIMA,
+    XGBoost) er implementert og evaluert med samme evalueringsrammeverk.
+    **Status: Oppnådd.**
+
+-   Analysen er fullt reproduserbar: fast random seed (42), faste
+    train/test-split (36/12 måneder) og all kode er versjonskontrollert
+    i Git.
+    **Status: Oppnådd.**
+
+-   Rapporten er ferdigstilt og godkjent av peer review innen
+    2026-04-29.
+    **Status: Oppnådd.** Rapport ferdigstilt; peer review gjennomført
+    innen fristen.
+
+Disse kriteriene er direkte knyttet til kravene REQ-001 til REQ-006 og
+brukes som grunnlag for kvalitetsvurdering i seksjon 3.6.
+
+Krav
+
+  ---------------------------------------------------------------------------------------------------
+  ID        Type               Krav                 Eier            Leveranse          Verifikasjon
+  --------- ------------------ -------------------- --------------- ------------------ --------------
+  REQ-001   Funksjonelt        Utarbeide prognose   Prosjektleder   Resultatkapittel   Analyse
+                               for fremtidig
+                               etterspørsel
+
+  REQ-002   Funksjonelt        Bruke historiske     Prosjektleder   Datagrunnlag       Review
+                               salgsdata som
+                               analysegrunnlag
+
+  REQ-003   Funksjonelt        Implementere minst   Prosjektleder   Metodekapittel     Review
+                               én klassisk
+                               prognosemodell
+
+  REQ-004   Funksjonelt        Sammenligne flere    Prosjektleder   Analysekapittel    Analyse
+                               prognosemetoder
+
+  REQ-005   Funksjonelt        Tolke resultatene i  Prosjektleder   Diskusjon          Review
+                               en logistikkfaglig
+                               kontekst
+
+  REQ-006   Ikke-funksjonelt   Dokumentere metode   Prosjektleder   Rapport            Review
+                               og analyse slik at
+                               arbeidet kan
+                               etterprøves
+  ---------------------------------------------------------------------------------------------------
+
+Løsning
+
+Løsningen består av en analysepipeline der historiske salgsdata
+struktureres og analyseres ved hjelp av fire prognosemodeller implementert i Python:
+
+> Naiv sesongprognose (referansemodell)\
+> Holt-Winters eksponentiell glatting\
+> ARIMA / SARIMA\
+> XGBoost (global maskinlæringsmodell)
+
+Modellene evalueres med feilmålene RMSE, MAE og MAPE (median over alle
+105 SKU-er). Resultatene presenteres i en vitenskapelig rapport med
+analyse og diskusjon av praktiske implikasjoner for logistikkplanlegging.
+
+2.8 Arbeidsnedbrytningsstruktur
+
+**Fase 1**
+
+- [x] 1\. Initiering
+
+  - [x] 1.1 Definere prosjektidé
+  - [x] 1.2 Avklare problemstilling
+  - [x] 1.3 Identifisere datagrunnlag
+  - [x] 1.4 Gjennomføre innledende litteratursøk
+  - [x] 1.5 Avklare metodisk tilnærming
+  - [x] 1.6 Utarbeide proposal
+  - [x] 1.7 Innlevering av proposal
+
+**Fase 2**
+
+- [x] 2\. Planlegging
+
+  - [x] 2.1 Etablere prosjektplan
+
+    - [x] 2.1.1 Definere prosjektomfang
+    - [x] 2.1.2 Definere prosjektmål
+    - [x] 2.1.3 Avklare avgrensninger
+
+  - [x] 2.2 Planlegge analysearbeid
+
+    - [x] 2.2.1 Strukturere datagrunnlag
+    - [x] 2.2.2 Velge prognosemetoder
+    - [x] 2.2.3 Definere evalueringsmetoder
+
+  - [x] 2.3 Planlegge fremdrift
+
+    - [x] 2.3.1 Lage arbeidsnedbrytningsstruktur
+    - [x] 2.3.2 Lage Gantt-plan
+    - [x] 2.3.3 Definere milepæler
+
+  - [x] 2.4 Godkjenning av prosjektplan
+
+**Fase 3**
+
+- [x] 3\. Gjennomføring
+
+  - [x] 3.1 Databehandling
+
+    - [x] 3.1.1 Importere datasett
+    - [x] 3.1.2 Rense og strukturere data
+    - [x] 3.1.3 Kontrollere datakvalitet
+
+  - [x] 3.2 Utforskende analyse
+
+    - [x] 3.2.1 Visualisere salgsutvikling
+    - [x] 3.2.2 Analysere trend
+    - [x] 3.2.3 Analysere sesongvariasjoner
+
+  - [x] 3.3 Prognosemodeller
+
+    - [x] 3.3.1 Implementere Holt-Winters modell
+    - [x] 3.3.2 Implementere ARIMA modell
+    - [x] 3.3.3 Implementere XGBoost modell
+
+  - [x] 3.4 Modellanalyse
+
+    - [x] 3.4.1 Beregne prognosefeil
+    - [x] 3.4.2 Sammenligne modellresultater
+    - [x] 3.4.3 Tolke resultatene
+
+  - [x] 3.5 Rapportarbeid
+
+    - [x] 3.5.1 Skrive metodekapittel
+    - [x] 3.5.2 Skrive resultatkapittel
+    - [x] 3.5.3 Skrive diskusjon
+
+**Fase 4**
+
+- [ ] 4\. Avslutning
+
+  - [ ] 4.1 Revidere rapport etter tilbakemeldinger
+  - [ ] 4.2 Ferdigstille analyse og figurer
+  - [ ] 4.3 Kvalitetssikre referanser og metode
+  - [ ] 4.4 Ferdigstille sluttrapport
+  - [ ] 4.5 Utarbeide presentasjon
+  - [ ] 4.6 Endelig innlevering
+
+3.0 Fremdrift
+
+Fremdriftsplanen følger kursets struktur:
+
+Fase 1: januar 2026\
+Fase 2: februar 2026\
+Fase 3: mars--april 2026\
+Fase 4: avslutning i mai 2026
+
+3.1 Milepæler
+
+  ---------------------------------------------------------------------------
+  Milepæl            Beskrivelse                      Dato         Status
+  ------------------ -------------------------------- ------------ ----------
+  Problemstilling og Endelig problemstilling definert 2026-01-12   Oppnådd
+  case avklart       og datagrunnlag identifisert
+
+  Proposal godkjent  Proposal levert og godkjent i    2026-01-21   Oppnådd
+                     fase 1
+
+  Prosjektplan       Prosjektstyringsplan ferdig og   2026-03-09   Oppnådd
+  ferdigstilt        etablert som planbaseline
+
+  Datagrunnlag       Datasett renset og strukturert   2026-03-11   Oppnådd
+  klargjort          for analyse
+
+  Første analyse     Første runde med modellering og  2026-03-25   Oppnådd
+  gjennomført        foreløpige resultater
+
+  Prognosemodell     Valgt modell implementert og     2026-04-10   Oppnådd
+  ferdigstilt        validert
+
+  Rapportutkast      Første fullstendige utkast av    2026-04-27   Oppnådd
+  ferdig             rapport
+
+  Peer review        Fagfellevurdering mottatt og     2026-04-29   Oppnådd
+  gjennomført        vurdert
+
+  Endelig rapport    Endelig versjon av rapport       2026-05-31   Planlagt
+  ferdigstilt        ferdig etter revisjon
+  ---------------------------------------------------------------------------
+
+3.1.1 Gantt-plan
+
+  -----------------------------------------------------------------------
+  Aktivitet                    Jan   Feb   Mar   Apr   Mai
+  ---------------------------- ----- ----- ----- ----- -----
+  **FASE 1 — Initiering**
+  Definere problemstilling     ████
+  Litteratursøk                ████
+  Utarbeide og levere proposal ████
+
+  **FASE 2 — Planlegging**
+  Etablere prosjektplan              ████
+  Velge prognosemetoder              ████
+  Definere evalueringsmetoder        ████
+  Lage WBS og Gantt-plan             ████
+
+  **FASE 3 — Gjennomføring**
+  Datavask og strukturering               ████
+  Utforskende dataanalyse (EDA)           ████
+  Implementere modeller                   ████ ████
+  Kjøre analyser og evaluere                   ████
+  Skrive metode- og resultatkapittel           ████
+  Skrive diskusjon og konklusjon               ████
+
+  **FASE 4 — Avslutning**
+  Revisjon etter peer review                        ████
+  Kvalitetssikre rapport og figurer                 ████
+  Ferdigstille og levere rapport                    ████
+  Utarbeide presentasjon                            ████
+  -----------------------------------------------------------------------
+
+3.2 Risiko
+
+De viktigste risikoene i prosjektet er identifisert og kvantitativt
+vurdert nedenfor. Sannsynlighet (P) er angitt på skala 0,0–1,0 og
+konsekvens (K) på skala 1–5. Risikoprioritetsindeks (RPN = P × K)
+benyttes for å rangere og prioritere risikohåndtering, i tråd med
+anerkjente prosjektledelsesprinsipper (PMI, 2021).
+
+  ------------------------------------------------------------------------------------------
+  ID     Risiko                        P      K    RPN   Prioritet   Tiltak
+  ------ ----------------------------- ------ ---- ----- ----------- -------------------------
+  R-01   Utilstrekkelig datakvalitet   0,20   5    1,00  Høy         Systematisk datavask
+         (manglende verdier, feil i                                   gjøres tidlig i fase 3;
+         registreringer)                                              nullverdier håndteres
+                                                                      eksplisitt i koden
+
+  R-03   Tidsmangel mot innleverings-  0,35   4    1,40  Høy         Milepælsplan med buffer;
+         fristen                                                       rapport prioriteres over
+                                                                       ytterligere modell-
+                                                                       eksperimenter
+
+  R-05   Datatap eller korrupsjon      0,10   5    0,50  Middels     Versjonskontroll med Git;
+         av prosjektfiler                                             sikkerhetskopi på
+                                                                      OneDrive og ekstern disk
+
+  R-06   Konfidensialitetsbrudd        0,10   5    0,50  Middels     Datasettet er anonymisert
+         knyttet til bedriftsdata                                     før analyse og bruk i
+                                                                      KI-verktøy; kun aggregerte
+                                                                      resultater presenteres
+
+  R-02   Modellene gir ikke tilfreds-  0,30   3    0,90  Middels     Naiv sesongprognose sikrer
+         stillende prognosenøyaktighet                                et minimumsnivå for
+                                                                      sammenligning; resultater
+                                                                      tolkes i lys av
+                                                                      datakvalitet
+
+  R-04   Tekniske problemer med        0,15   3    0,45  Lav         Alle biblioteker (pmdarima,
+         Python-biblioteker                                           xgboost, statsmodels)
+                                                                      testes tidlig; fallback
+                                                                      til enklere modell ved
+                                                                      feil
+  ------------------------------------------------------------------------------------------
+
+*Risikomatrisen er sortert etter RPN (høyest til lavest). Risikoer med
+RPN ≥ 1,0 følges opp ved hvert milepælspunkt.*
+
+3.3 Ressurser
+
+Prosjektet gjennomføres som et individuelt prosjekt av Morten Eidsvåg.
+Ressursene er begrenset til studentens egen innsats, fritt tilgjengelige
+programvareverktøy og datautstyr som er tilgjengelig for studenten.
+
+Ressursoversikt:
+
+-   **Menneskelige ressurser:** Studenten (Morten Eidsvåg) som
+    prosjektleder, analytiker og rapportforfatter. Veileder (Bård Inge
+    Austigard Pedersen) bidrar med faglig veiledning ved behov.
+
+-   **Programvareverktøy:** Python med bibliotekene pandas, numpy,
+    statsmodels, pmdarima, xgboost, matplotlib og scikit-learn. Alle
+    verktøy er gratis og åpen kildekode. Visual Studio Code benyttes som
+    utviklingsmiljø. Git og GitHub benyttes til versjonskontroll.
+
+-   **Data:** Anonymisert datasett hentet fra virksomhetens ERP-system.
+    Datasettet er allerede tilgjengelig og klargjort for analyse.
+
+-   **Utstyr:** Studentens egen PC med tilstrekkelig kapasitet for
+    Python-analyse og rapportskriving.
+
+-   **Estimert tidsbruk:** Ca. 200 timer totalt fordelt over prosjektets
+    fire faser (inklusive litteratursøk, analyse, modellering og
+    rapportskriving).
+
+3.4 Kritiske ressurser
+
+Følgende ressurser er kritiske for prosjektets gjennomføring, og bortfall
+eller begrensninger i disse vil kunne forsinke eller svekke leveransene:
+
+-   **Tilgang til datasettet:** Datasettet er grunnlaget for hele
+    analysen. Tap, korrupsjon eller uforutsette konfidensialitetshensyn
+    vil stoppe prosjektet. Risiko reduseres gjennom Git-versjonskontroll
+    og OneDrive-backup.
+
+-   **Studentens tid:** Prosjektet er avhengig av at studenten
+    prioriterer tilstrekkelig tid til analyse og rapportskriving innenfor
+    den gitte tidsrammen, parallelt med andre studiefag og arbeid.
+
+-   **Analyseverktøy:** Python og relevante biblioteker må fungere som
+    forventet. Kritiske biblioteker testes tidlig i fase 3 for å avdekke
+    eventuelle installasjons- eller kompatibilitetsproblemer.
+
+-   **Veiledning:** Tilgang til faglig veiledning fra Bård Inge
+    Austigard Pedersen er viktig for å sikre faglig kvalitet i rapport
+    og metode. Veiledning avklares i god tid før milepæler.
+
+3.5 Kommunikasjon
+
+Kommunikasjonen i prosjektet er strukturert rundt tre relasjoner: student
+og veileder, student og kontaktperson i virksomheten, og student og
+emneansvarlig / kursledelse.
+
+**Student og veileder (Bård Inge Austigard Pedersen):**\
+Veiledning skjer ved behov, minimum én gang per prosjektfase. Studenten
+tar initiativ til veiledning og forbereder spørsmål og materiale i forkant
+av hvert møte. Kommunikasjonskanal: e-post og fysisk/digitalt møte.
+
+**Student og kontaktperson i virksomheten (Erik Langlo):**\
+Kontakt ved behov, primært knyttet til avklaring av datasett,
+anonymisering og forståelse av forretningskontekst. Kommunikasjonskanal:
+e-post. Frekvens: ved behov, ikke fast møteplan.
+
+**Student og kursledelse / emneansvarlig:**\
+Kommunikasjon skjer via kursets læringsplattform (Blackboard/Canvas) og
+i forbindelse med innleveringer. Frister og krav følges i henhold til
+kursets plan.
+
+**Intern dokumentasjon:**\
+All analyse, kode og rapport dokumenteres løpende i prosjektets Git-repository.
+Prosjektstyringsplanen oppdateres ved vesentlige endringer i omfang,
+fremdrift eller risiko.
+
+**Peer review:**\
+Fagfellevurdering gjennomføres som del av kursets opplegg i siste uke
+av april (innen 2026-04-29). Tilbakemeldingene vurderes og relevante
+justeringer gjøres i rapporten før endelig innlevering.
+
+3.5.1 RACI-matrise
+
+Ansvarsfordelingen i prosjektet er strukturert ved hjelp av en
+RACI-matrise (R = Responsible, A = Accountable, C = Consulted,
+I = Informed), i tråd med PMI (2021).
+
+  -------------------------------------------------------------------------------------------
+  Aktivitet                    Student (ME)   Veileder (BAP)   Kontaktperson   Kursledelse
+  ---------------------------- -------------- ---------------- --------------- -------------
+  Datainnsamling og -vask      R / A          C                C               I
+
+  Utforskende analyse (EDA)    R / A          C                —               I
+
+  Implementere modeller        R / A          C                —               I
+
+  Evaluere og tolke resultater R / A          C                —               I
+
+  Skrive rapport               R / A          C                I               I
+
+  Peer review                  R / A          —                —               I
+
+  Innlevering av rapport       R / A          I                —               A
+
+  Oppdatere prosjektplan       R / A          C                —               I
+  -------------------------------------------------------------------------------------------
+
+*ME = Morten Eidsvåg, BAP = Bård Inge Austigard Pedersen*
+
+3.6 Kvalitet
+
+Kvalitet i prosjektet sikres gjennom følgende tiltak:
+
+**Metodisk dokumentasjon:**\
+All analyse, alle modellvalg og alle parametere dokumenteres i rapporten
+slik at arbeidet kan etterprøves av andre. Python-koden er strukturert,
+kommentert og lagret i versjonskontroll.
+
+**Reproduserbarhet:**\
+Analysen er implementert i Python med fast random seed (42) og faste
+train/test-split (36/12 måneder). Samme evalueringsrammeverk benyttes
+for alle modeller for å sikre sammenlignbarhet.
+
+**Intern gjennomgang:**\
+Studenten gjennomgår alle analyseresultater og rapporttekst kritisk
+mellom hvert delsteg. Tall i rapporten kontrolleres mot kodeutskrifter
+og CSV-filer.
+
+**Peer review:**\
+Rapport sendes til fagfellevurdering som del av kursets opplegg.
+Tilbakemeldinger vurderes systematisk og det tas stilling til alle
+kommentarer før endelig innlevering.
+
+**Kildebruk:**\
+Alle referanser følger APA 7. utgave (norsk versjon). Referanselisten
+kontrolleres mot tekst og sitatbruk gjennomgås for nøyaktighet.
+
+**Kriterier for godkjent kvalitet:**\
+Rapporten anses ferdig når alle krav i REQ-001 til REQ-006 er oppfylt,
+analysen er reproduserbar og rapporten er gjennomgått av peer review.
+
+3.7 Anskaffelser
+
+Prosjektet krever ingen eksterne anskaffelser. Alle programvareverktøy
+som benyttes er fritt tilgjengelige og åpen kildekode (Python, pandas,
+statsmodels, pmdarima, xgboost, matplotlib, scikit-learn, Visual Studio
+Code, Git). Datasettet er hentet internt fra virksomheten av studenten
+selv og er ikke kjøpt eller lisensiert fra tredjepart. Det påløper ingen
+kostnader knyttet til anskaffelser i dette prosjektet.
+
+3.8 Dataforvaltningsplan
+
+Dataforvaltningsplanen beskriver hvordan data håndteres gjennom
+prosjektets livssyklus, i tråd med krav til reproduserbarhet og
+konfidensialitet i akademisk forskning.
+
+**Datakilde og opprinnelse:**\
+Datasettet er hentet fra virksomhetens ERP-system og består av
+anonymiserte salgsdata for 105 SKU-er over en periode på 48 måneder
+(januar 2022 – desember 2025). Anonymiseringen er gjennomført av
+kontaktperson Erik Langlo før utlevering til studenten.
+
+**Dataformat og versjonering:**\
+Rådata lagres i CSV-format og er versjonskontrollert i prosjektets
+Git-repository. Bearbeidede data (renset datasett, aggregerte resultater)
+lagres som separate filer og dokumenteres med beskrivende filnavn og
+endringslogg i Git.
+
+**Tilgangsbegrensning og konfidensialitet:**\
+Datasettet lagres kun lokalt på studentens PC og i OneDrive (privat,
+ikke delt). Rådata publiseres ikke i offentlige Git-repositories eller
+deles med tredjeparter. Kun aggregerte og anonymiserte resultater
+presenteres i rapporten og eventuelle vedlegg.
+
+**Bruk av KI-verktøy:**\
+Anonymiserte data kan benyttes som kontekst i KI-støttede analyseverktøy
+der dette er nødvendig for analysearbeidet. Ingen identifiserbare
+bedriftsdata eller personopplysninger inngår i slike forespørsler.
+
+**Arkivering og sletting:**\
+Etter prosjektets avslutning (2026-05-31) arkiveres prosjektets
+Git-repository. Rådata slettes fra skytjenester innen 2026-08-31 dersom
+virksomheten ikke har gitt eksplisitt samtykke til videre lagring.
+
+**Integritet og validering:**\
+Datasettets integritet verifiseres ved import ved kontroll av antall
+rader, kolonner og verdier mot forventede parametre (105 SKU-er,
+48 måneder). Kontrollresultater loggføres i kode.
+
+Endringskontrollprosess
+
+Eventuelle endringer i problemstilling, metode eller fremdriftsplan
+dokumenteres og vurderes opp mot prosjektets mål og tidsramme.
+Vesentlige endringer avklares med faglærer og registreres i
+dokumentets versjonslogg (se side 1).
+
+Referanser
+
+Project Management Institute. (2021). *A guide to the project management
+body of knowledge (PMBOK® Guide)* (7. utg.). Project Management
+Institute.
